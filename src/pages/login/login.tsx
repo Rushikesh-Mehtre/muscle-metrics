@@ -6,6 +6,7 @@ import { RootState } from '../../store/store';
 import Welcome from '../Welcome/Welcome';
 import { useNavigate } from 'react-router-dom';
 const Login = ()=>{
+    console.log("working on login page")
     const [loginData,setLoginData]=useState({
         username:"",
         password:""

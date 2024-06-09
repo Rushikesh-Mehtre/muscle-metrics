@@ -9,6 +9,7 @@ import { addWorkout } from '../../store/features/my-workout-plan/myWorkoutPlanSl
 import { showAlert } from '../../store/features/alert/alertSlice';
 import { ADD_AT_LEAST_ONE_EXERCISE, EXERCISES_ADDED_SUCCESSFULLY } from '../../utils/constants/app.constants';
 import Button from '../../components/Button/Button';
+import PageHeading from '../../components/PageHeading/PageHeading';
 
 const WorkoutPlan = () => {
     // state variables
@@ -239,9 +240,7 @@ const WorkoutPlan = () => {
 
     return (
         <div className='workout-plan-container'>
-            <p>
-                Lets setup workout plan
-            </p>
+          <PageHeading headingLabel="Lets make workout plan"/>
             {workoutData.length > 0 ? <div>
                 <Dropdown options={workoutData} labelHeading="Select body part" optionSelectHandler={optionSelectHandler} />
             </div> : <p>added workouts will be here with card.</p>}
@@ -254,12 +253,13 @@ const WorkoutPlan = () => {
                         addToListHandler={addToListHandler}
                         updatedList={updatedList}
                         removeFromListHandler={removeFromListHandler}
+                        editable={true}
                     />
                 })
             }
             {
                 exerciseData.length > 0 &&
-                <Button buttonTitle='Add to workout plan' onClick={addToWorkoutPlan} disabled={updatedList.length === 0} />
+                <Button buttonTitle='Add to workout plan' onClick={addToWorkoutPlan} disabled={updatedList.length === 0} size="medium" />
             }
         </div>
     )

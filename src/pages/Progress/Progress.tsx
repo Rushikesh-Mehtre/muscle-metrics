@@ -1,8 +1,9 @@
 import React from 'react'
 
+import "./Progress.scss"
 const Progress = () => {
   return (
-    <div>Progress</div>
+    <div className='progress-container'>Progress section to be added soon !</div>
   )
 }
 

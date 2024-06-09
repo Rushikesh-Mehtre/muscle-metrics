@@ -1,17 +1,56 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-
+import Button from '../../components/Button/Button'
+import { RootState } from '../../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import "./Profile.scss"
+import { useNavigate } from 'react-router-dom';
+import ListCard from '../../components/ListCard/ListCard';
+import PageHeading from '../../components/PageHeading/PageHeading';
+import { addWorkout } from '../../store/features/my-workout-plan/myWorkoutPlanSlice';
 const Profile = () => {
+
+  // variables
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const myWorkouts = useSelector((state: RootState) => state.myWorkoutPlan.workouts);
+  console.log("myWorkouts", myWorkouts)
+  // ui functions
+  const goToWorkoutPlan = () => {
+    navigate('/workout-plan')
+  }
+
+  const deleteWorkout = (workOutToDelete:string)=>{
+    console.log("myWorkouts",myWorkouts)
+    let updatedMyWorkouts = myWorkouts.filter((item)=>item.title !==workOutToDelete);
+    console.log("updatedMyWorkouts",updatedMyWorkouts)
+    // dispatch(addWorkout(updatedMyWorkouts));
+  }
   return (
     <div className='profile-container'>
-       <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
-                            <Link
-                                to="/workout-plan"
-                                className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                            >
-                                Add workout plan
-                            </Link>
-                        </div>
+      {/* if no workout added to profile */}
+      {
+        myWorkouts.length === 0 &&
+        <div className='no-my-workouts-container'>
+          <p className='no-workout-label'>Oops ! No workouts added to profile !</p>
+          <Button buttonTitle='Add workout plan' onClick={goToWorkoutPlan} />
+
+        </div>
+      }
+      {
+        myWorkouts.length > 0 &&
+        <div className='my-workout-plan'>
+          <PageHeading headingLabel="My workout plan" />
+          {myWorkouts.map((item) => <ListCard 
+          cardHeading={item.title} 
+          cardList={item.exercises} 
+          editable={false} 
+          deleteWorkout={deleteWorkout}
+          />)}
+        </div>
+
+      }
+
+
     </div>
   )
 }

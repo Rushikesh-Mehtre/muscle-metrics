@@ -1,117 +1,79 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-import { useDispatch } from "react-redux"
-import HeroImage from "../../assets/images/landing-hero-image.jpg"
-import { login } from "../../store/features/login/loginSlice";
-import { useNavigate } from "react-router-dom";
-import { STRING_CONSTANTS } from "../../utils/constants/app.constants";
-import "./login.scss";
+import React, { useState } from 'react';
+import './login.scss';
+import { useDispatch } from 'react-redux';
+import { showAlert } from '../../store/features/alert/alertSlice';
+import { FEATURE_WILL_BE_ADDED_SOON } from '../../utils/constants/app.constants';
+import { login } from '../../store/features/login/loginSlice';
+import { useNavigate } from 'react-router-dom';
+import Button from '../../components/Button/Button';
 
+const Login: React.FC = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-export default function Login() {
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log('Username:', username);
+    console.log('Password:', password);
+  };
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const loginHandler = () => {
-    dispatch(login());
-    navigate("/home")
+  // const registerUserHandler = ()=>{
+  //   console.log("into registerUserHandler")
+  //   dispatch(showAlert(FEATURE_WILL_BE_ADDED_SOON))
+  // }
 
+  const loginHandler = ()=>{
+    dispatch(login());
+    navigate("/home");
   }
   return (
-    <>
-      {/*
-          This example requires updating your template:
-  
-          ```
-          <html class="h-full bg-white">
-          <body class="h-full">
-          ```
-        */}
-      <div className="login-container flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src={HeroImage}
-            alt="Muscle Metrics logo preview"
+    <div className="login-container">
+      <h2 className="login-title">Login to continue</h2>
+      <form className="login-form" onSubmit={handleSubmit}>
+        <div className="login-form-group">
+          <label htmlFor="username" className="login-label">Username</label>
+          <input
+            type="text"
+            id="username"
+            className="login-input"
+            value={username}
+            onChange={handleUsernameChange}
+            required
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Sign in to your account
-          </h2>
         </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                  Password
-                </label>
-                <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                onClick={loginHandler}
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
-
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Not a member?{' '}
-            <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-              Create account
-            </a>
-          </p>
+        <div className="login-form-group">
+          <label htmlFor="password" className="login-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            className="login-input"
+            value={password}
+            onChange={handlePasswordChange}
+            required
+          />
         </div>
-      </div>
-      <p className='not-supported-device'>{STRING_CONSTANTS.ONLY_FOR_MOBILE_LABEL}</p>
+        <Button buttonTitle='Login' onClick={loginHandler} size="medium" />
+      </form>
+      <p className="login-register-link">
+        <span>
 
-    </>
-  )
-}
+        Don't have an account?  
+        </span>
+        <span onClick={()=>registerUserHandler()} className='register-label'> Register</span>
+      </p>
+    </div>
+  );
+};
+
+export default Login;

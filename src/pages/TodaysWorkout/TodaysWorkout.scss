@@ -1,3 +1,14 @@
 .todays-workout-container{
     padding: 15px;
+
+    .no-exercises-to-show{
+        padding-top: 100px;
+        .no-exercise-label{
+            text-align: center;
+        }
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
 }
+

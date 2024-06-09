@@ -11,8 +11,9 @@ import Accordion from '../../components/Accordian/Accordian';
 
 const TodaysWorkout = () => {
     const [workoutData, setWorkOutData] = useState([]);
-    const workouts = useSelector((state: RootState) => state.myWorkoutPlan.workouts);
+    const myWorkouts = useSelector((state: RootState) => state.myWorkoutPlan.workouts);
     const [dataToShow, setDataToShow] = useState([]);
+    const [selectedWorkout,setSelectedWorkout]=useState("");
     console.log("dataToShow",dataToShow)
     // const fetchWorkoutData = () => {
     //     axios.get("http://localhost:1337/api/workouts").then((response) => {
@@ -197,8 +198,9 @@ const TodaysWorkout = () => {
           setWorkOutData(workouts);
     }
     const optionSelectHandler = (selectedOption: string) => {
+      setSelectedWorkout(selectedOption)
         // to filter out data from myWorkoutPlan store based on selectedOption and show it here
-        let dataToShow = workouts.filter((item) => item.title === selectedOption);
+        let dataToShow = myWorkouts.filter((item) => item.title === selectedOption);
         // add array to maintain set and reps dynamically. 
         if (dataToShow.length > 0) {
             let { title, exercises } = dataToShow[0];
@@ -280,7 +282,7 @@ const TodaysWorkout = () => {
                 <Dropdown options={workoutData} labelHeading="Select today's workout" optionSelectHandler={optionSelectHandler} />
             </div> : <p>Loading...</p>}
             {dataToShow?.exercises?.length > 0 ? <Accordion items={[...dataToShow.exercises]} handleCurrentSet={handleCurrentSet} repCountHandler={repCountHandler} /> :    <div className='no-exercises-to-show'>
-                <p>Oops ! You have no exercises added </p>
+                <p className='no-exercise-label'>Oops ! You have no exercises added for {selectedWorkout} </p>
                 <Button buttonTitle='Add Exercises' onClick={addExerciseHandler} disabled={false} />
             </div>}
 

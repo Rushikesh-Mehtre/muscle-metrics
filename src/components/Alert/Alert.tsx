@@ -8,7 +8,7 @@ const Alert = () => {
     // variables
     const dispatch = useDispatch();
     const alertData = useSelector((state: RootState) => state.alert);
-    const {heading,subHeading,type,duration}= alertData;
+    const {heading,subHeading,type="message",duration}= alertData;
 
     // use effect blocks
     useEffect(()=>{

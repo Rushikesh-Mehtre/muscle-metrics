@@ -1,18 +1,48 @@
-.login-container{
+/* src/Login.css */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  height: 100vh;
 }
 
-@media screen and (max-width:480px) {
-    .not-supported-device{
-      display: none;
-    }
+.login-title {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 51, 102, 0.1);
+}
+
+.login-form-group {
+  margin-bottom: 15px;
+}
+
+.login-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.login-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.login-register-link {
+  margin-top: 15px;
+  .register-label{
+    color: #003366;
   }
-  @media screen and (min-width: 481px) {
-    .login-container{
-      display: none;
-    }
-    .not-supported-device{
-      display: block;
-      text-align: center;
-    }
-  }
-  
+}

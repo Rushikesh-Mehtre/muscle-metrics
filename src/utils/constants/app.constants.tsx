@@ -21,3 +21,8 @@ export const EXERCISES_ADDED_SUCCESSFULLY = {
     subHeading:"Exercises added to your workout plan.",
     duration:2000
 }
+export const FEATURE_WILL_BE_ADDED_SOON = {
+    heading:"Feature to be added soon !",
+    subHeading:"Our team is working on adding this feature.",
+    duration:2000
+}

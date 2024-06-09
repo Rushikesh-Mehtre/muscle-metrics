@@ -1,11 +1,35 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import loginReducer from './features/login/loginSlice'
+import alertReducer from './features/alert/alertSlice'
+import myWorkoutPlanReducer from './features/my-workout-plan/myWorkoutPlanSlice'
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import { thunk } from 'redux-thunk';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+const rootReducer = combineReducers({
+  login: loginReducer,
+  alert: alertReducer,
+  myWorkoutPlan:myWorkoutPlanReducer
+})
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-  reducer: {
-    login : loginReducer
-  },
+  reducer: persistedReducer,
+  devTools: process.env.NODE_ENV !== 'production',
+  // middleware: [thunk]
 })
+
+export const persistor = persistStore(store)
+// export const store = configureStore({
+//   reducer: {
+//     login : loginReducer
+//   },
+// })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>

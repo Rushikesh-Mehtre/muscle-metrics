@@ -1,26 +1,31 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-.App{
-  padding: 15px;
-  height: 100vh;}
 
- /* to keep application for mobiles only */
+.App {
+  height: 100vh;
+  padding-top: 63px;
+}
+
+/* to keep application for mobiles only */
 @media screen and (max-width:480px) {
-  .App{
+  .App {
     width: 100%;
   }
-  .not-supported-device{
+
+  .not-supported-device {
     display: none;
   }
 }
+
 @media screen and (min-width: 481px) {
-  .App{
+  .App {
     display: none;
   }
-  .not-supported-device{
+
+  .not-supported-device {
     display: block;
     text-align: center;
   }

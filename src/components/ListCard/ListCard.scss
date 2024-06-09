@@ -1,0 +1,32 @@
+.list-card-container{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid  #1f2938;   
+    border-radius: 4px;
+    margin-bottom: 20px;
+.list-card-heading{
+font-size: 20px;
+font-weight: bold;
+}
+.card-list{
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .card-list-item{
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 4px;
+
+    &.already-added{
+        background-color: green;
+    }
+    &.not-added{
+        background-color: aliceblue;
+    }
+    }
+}
+}

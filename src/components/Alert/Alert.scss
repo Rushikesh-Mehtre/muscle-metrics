@@ -1,0 +1,18 @@
+.alert-container{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    border-radius: 4px;
+    background-color:  #1f2937;
+    color: white;
+    padding: 5px 10px;
+    .heading{
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .sub-heading{
+        font-size: 12px;
+        
+    }
+}

@@ -6,11 +6,11 @@ export interface loginState {
 }
 
 const initialState: loginState = {
-    isLoggedIn: false,
+  isLoggedIn: false,
 }
 
 export const loginSlice = createSlice({
-  name: 'counter',
+  name: 'login',
   initialState,
   reducers: {
     login: (state) => {
@@ -21,7 +21,7 @@ export const loginSlice = createSlice({
       state.isLoggedIn = true
     },
     logout: (state) => {
-        state.isLoggedIn = false
+      state.isLoggedIn = false
     },
 
   },

@@ -1,0 +1,12 @@
+.button-container{
+    background-color: #1f2938;       
+    border-radius: 4px;
+   width: 100%;
+   color: white;
+   padding: 5px;
+
+   &.disabled{
+    pointer-events: none;
+    background-color: #878c94; 
+   }
+}

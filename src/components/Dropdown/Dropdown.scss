@@ -1,0 +1,16 @@
+.dropdown-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    margin: 10px 0;
+    // border: 1px solid #1f2938;
+    border-radius: 4px;
+
+    select{
+        border: 1px solid #1f3556;
+    padding: 10px;
+    border-radius: 4px;
+    }
+}

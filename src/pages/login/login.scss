@@ -1,15 +1,18 @@
 .login-container{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    height: 100%;
-    .login-heading{
-        text-align: center;
-    }
-    .login-form{
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
 }
+
+@media screen and (max-width:480px) {
+    .not-supported-device{
+      display: none;
+    }
+  }
+  @media screen and (min-width: 481px) {
+    .login-container{
+      display: none;
+    }
+    .not-supported-device{
+      display: block;
+      text-align: center;
+    }
+  }
+  

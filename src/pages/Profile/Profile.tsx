@@ -6,7 +6,7 @@ import "./Profile.scss"
 import { useNavigate } from 'react-router-dom';
 import ListCard from '../../components/ListCard/ListCard';
 import PageHeading from '../../components/PageHeading/PageHeading';
-import { addWorkout } from '../../store/features/my-workout-plan/myWorkoutPlanSlice';
+import { addWorkout, updateWorkout } from '../../store/features/my-workout-plan/myWorkoutPlanSlice';
 const Profile = () => {
 
   // variables
@@ -21,9 +21,10 @@ const Profile = () => {
 
   const deleteWorkout = (workOutToDelete:string)=>{
     console.log("myWorkouts",myWorkouts)
+    console.log("workOutToDelete",workOutToDelete)
     let updatedMyWorkouts = myWorkouts.filter((item)=>item.title !==workOutToDelete);
     console.log("updatedMyWorkouts",updatedMyWorkouts)
-    // dispatch(addWorkout(updatedMyWorkouts));
+    dispatch(updateWorkout(updatedMyWorkouts));
   }
   return (
     <div className='profile-container'>
@@ -33,7 +34,6 @@ const Profile = () => {
         <div className='no-my-workouts-container'>
           <p className='no-workout-label'>Oops ! No workouts added to profile !</p>
           <Button buttonTitle='Add workout plan' onClick={goToWorkoutPlan} />
-
         </div>
       }
       {
@@ -45,6 +45,7 @@ const Profile = () => {
           cardList={item.exercises} 
           editable={false} 
           deleteWorkout={deleteWorkout}
+          canBeDeleted={true}
           />)}
         </div>
 

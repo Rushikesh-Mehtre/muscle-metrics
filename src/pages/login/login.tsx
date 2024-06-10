@@ -28,10 +28,10 @@ const Login: React.FC = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const registerUserHandler = ()=>{
-  //   console.log("into registerUserHandler")
-  //   dispatch(showAlert(FEATURE_WILL_BE_ADDED_SOON))
-  // }
+  const registerUserHandler = ()=>{
+    console.log("into registerUserHandler")
+    // dispatch(showAlert(FEATURE_WILL_BE_ADDED_SOON))
+  }
 
   const loginHandler = ()=>{
     dispatch(login());

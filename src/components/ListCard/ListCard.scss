@@ -6,17 +6,17 @@
     border-radius: 4px;
     margin-bottom: 20px;
 
-    .list-card-header{
+    .list-card-header {
         display: flex;
         justify-content: space-between;
-        gap: 10px;
+        gap: 150px;
 
         .list-card-heading {
             font-size: 20px;
-        font-weight: bold;
-    text-transform: capitalize;
-}
-}
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+    }
 
     .card-list {
 

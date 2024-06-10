@@ -42,8 +42,8 @@ const AccordionItem = ({ index, isActive, title, currentSet, onClick, handleCurr
   return (
     <div className="accordion-item">
       <div className="accordion-title" onClick={() => onClick(index)}>
-        <h3>{title}</h3>
-        <span>{isActive ? '-' : '+'}</span>
+        <p className='title'>{title}</p>
+        <span className='icon'>{isActive ? '-' : '+'}</span>
       </div>
       {isActive && <div className="accordion-content">
         <div className='table-header'>

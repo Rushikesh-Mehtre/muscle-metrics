@@ -33,12 +33,15 @@ export const myWorkoutPlanSlice = createSlice({
     },
     clearAllWorkouts : (state)=>{
       state.workouts = [];
+    },
+    updateWorkout:(state,action)=>{
+      state.workouts = action.payload
     }
 
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { addWorkout, removeWorkout,clearAllWorkouts } = myWorkoutPlanSlice.actions
+export const { addWorkout, removeWorkout,clearAllWorkouts ,updateWorkout} = myWorkoutPlanSlice.actions
 
 export default myWorkoutPlanSlice.reducer

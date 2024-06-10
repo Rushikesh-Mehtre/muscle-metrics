@@ -10,4 +10,5 @@ export interface ListCardProps {
     updatedList?:listItem[]
     editable:boolean,
     deleteWorkout?:any
+    canBeDeleted?:boolean
 }

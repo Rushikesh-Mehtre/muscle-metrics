@@ -8,16 +8,21 @@ import Profile from "./pages/Profile/Profile";
 import Progress from "./pages/Progress/Progress";
 import WorkoutPlan from "./pages/WorkoutPlan/WorkoutPlan";
 import TodaysWorkout from "./pages/TodaysWorkout/TodaysWorkout";
+import Register from "./pages/Register/Register";
 
 export const router = createBrowserRouter([
-    {
-      path: "/login",
-      element: <Login/>,
-    },
     {
       path: "/",
       element: <App/>,
       children:[
+        {
+          path:'login',
+          element:<Login/>
+        },
+        {
+          path:'register',
+          element:<Register/>
+        },
         {
           path:'home',
           element:<Home/>

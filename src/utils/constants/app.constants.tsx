@@ -26,3 +26,28 @@ export const FEATURE_WILL_BE_ADDED_SOON = {
     subHeading:"Our team is working on adding this feature.",
     duration:2000
 }
+export const ACCOUNT_CREATED_SUCCESSFULLY = {
+    heading:"Account created successfully!",
+    subHeading:"Redirecting to login page",
+    duration:1500
+}
+export const LOGGED_IN_SUCCESSFULLY = {
+    heading:"logged in successfully!",
+    subHeading:"Redirecting to home page",
+    duration:1500
+}
+export const PASSWORD_DO_NOT_MATCH = {
+    heading:"Oops ! ",
+    subHeading:"Passwords do not match.",
+    duration:1500
+}
+export const INVALID_CREDENTIALS = {
+    heading:"Invalid credentials",
+    subHeading:"Please check email id or password",
+    duration:1500
+}
+export const ACCOUNT_DOES_NOT_EXIST = {
+    heading:"Account does not exist",
+    subHeading:"Please create account to continue",
+    duration:1500
+}

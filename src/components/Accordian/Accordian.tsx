@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import "./Accordian.scss"
 import Button from '../Button/Button';
 const Accordion = ({ items, handleCurrentSet ,repCountHandler}) => {
-  console.log("items", items)
   const [activeIndex, setActiveIndex] = useState(null);
 
   const handleItemClick = (index) => {
@@ -31,7 +30,6 @@ const Accordion = ({ items, handleCurrentSet ,repCountHandler}) => {
 };
 
 const AccordionItem = ({ index, isActive, title, currentSet, onClick, handleCurrentSet, exerciseCount,repCountHandler }) => {
-  console.log("currentSet",currentSet)
   const [repCount, setRepCount] = useState(0);
   const addSetHandler = () => {
     handleCurrentSet(index, currentSet, repCount,);

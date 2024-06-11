@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './login.scss';
 import { useDispatch } from 'react-redux';
 import { showAlert } from '../../store/features/alert/alertSlice';
-import { FEATURE_WILL_BE_ADDED_SOON } from '../../utils/constants/app.constants';
-import { login } from '../../store/features/login/loginSlice';
+import { ACCOUNT_DOES_NOT_EXIST, FEATURE_WILL_BE_ADDED_SOON, INVALID_CREDENTIALS, LOGGED_IN_SUCCESSFULLY } from '../../utils/constants/app.constants';
+import { login, logout } from '../../store/features/login/loginSlice';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
+import { auth } from '../../firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -22,21 +24,42 @@ const Login: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log('Username:', username);
-    console.log('Password:', password);
   };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const registerUserHandler = ()=>{
-    console.log("into registerUserHandler")
-    // dispatch(showAlert(FEATURE_WILL_BE_ADDED_SOON))
+
+  const GoToRegisterPage = () => {
+    navigate("/register")
   }
 
-  const loginHandler = ()=>{
-    dispatch(login());
-    navigate("/home");
+  const loginHandler = async () => {
+
+    try {
+      const loginUserCredentials = await signInWithEmailAndPassword(auth, username, password);
+      const user = loginUserCredentials.user;
+      console.log("user",user);
+      dispatch(showAlert(LOGGED_IN_SUCCESSFULLY))
+      setTimeout(() => {
+        dispatch(login({userId:user.uid}));
+        navigate("/home");
+      }, 1500);
+      // Handle successful login, e.g., redirect to another page
+    } catch (error) {
+      if (error.message === 'Firebase: Error (auth/invalid-credential).') {
+        dispatch(showAlert(INVALID_CREDENTIALS))
+      } else if (error.message === 'Firebase: Error (auth/invalid-email).') {
+        dispatch(showAlert(ACCOUNT_DOES_NOT_EXIST))
+      } else {
+        dispatch(showAlert({
+          heading: "Error",
+          subHeading: (error as Error).message,
+          duration: 1500
+        }))
+      }
+    }
   }
+
   return (
     <div className="login-container">
       <h2 className="login-title">Login to continue</h2>
@@ -68,9 +91,9 @@ const Login: React.FC = () => {
       <p className="login-register-link">
         <span>
 
-        Don't have an account?  
+          Don't have an account?
         </span>
-        <span onClick={()=>registerUserHandler()} className='register-label'> Register</span>
+        <span onClick={() => GoToRegisterPage()} className='register-label'> Register</span>
       </p>
     </div>
   );

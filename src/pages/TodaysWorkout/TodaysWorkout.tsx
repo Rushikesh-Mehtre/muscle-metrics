@@ -14,13 +14,6 @@ const TodaysWorkout = () => {
     const myWorkouts = useSelector((state: RootState) => state.myWorkoutPlan.workouts);
     const [dataToShow, setDataToShow] = useState([]);
     const [selectedWorkout,setSelectedWorkout]=useState("");
-    console.log("dataToShow",dataToShow)
-    // const fetchWorkoutData = () => {
-    //     axios.get("http://localhost:1337/api/workouts").then((response) => {
-    //         setWorkOutData(response.data.data[0].attributes.workouts);
-    //     });
-    // }
-
     const fetchWorkoutData = ()=>{
         
         const     workouts = [
@@ -235,7 +228,6 @@ const TodaysWorkout = () => {
     //     if (index >= 0 && index < arrayToUpdate.length) {
     //         arrayToUpdate[index] = { ...arrayToUpdate[index], ...objToAdd };
     //       };
-    //     console.log("arrayToUpdate",arrayToUpdate)
     //     setDataToShow(arrayToUpdate);  
     // }
     const handleCurrentSet = (exerciseIndex: number, setNo: number, repCount: number) => {
@@ -255,23 +247,17 @@ const TodaysWorkout = () => {
     
     const repCountHandler = (exerciseIndex: number, setNo: number, repCount: number)=>{
         // update rep count for current exercise.
-        console.log("dataToShow",dataToShow);
         let dataToShowCopy = {...dataToShow};
         let { title, exercises } = dataToShowCopy;
-        console.log("exercises",exercises)
         let exercisesCopy = [...exercises]
         let exerciseCount = exercisesCopy[exerciseIndex].exerciseCount;
-        console.log("exerciseCount",exerciseCount)
         exerciseCount[setNo-1]={setNo:setNo,repCount:repCount};
-        console.log("exerciseCount",exerciseCount)
         const updatedArray = exercises.map((item, i) => {
-            console.log("i",i,exerciseIndex);
             if (i === exerciseIndex) {
                 return { ...item, exerciseCount };
             }
             return item;
         });
-        console.log(updatedArray)
         let finalDataToShow = { title, exercises: updatedArray }
         setDataToShow(finalDataToShow);
     }

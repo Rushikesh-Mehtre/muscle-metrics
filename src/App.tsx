@@ -14,7 +14,6 @@ import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 function App() {
   const isLoggedIn = useSelector((state: RootState) => state.login.isLoggedIn);
   const isAlertVisible = useSelector((state: RootState) => state.alert.isAlertVisible);
-  console.log("isAlertVisible", isAlertVisible)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {

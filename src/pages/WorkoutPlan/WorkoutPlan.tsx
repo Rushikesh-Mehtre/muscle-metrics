@@ -11,6 +11,10 @@ import { ADD_AT_LEAST_ONE_EXERCISE, EXERCISES_ADDED_SUCCESSFULLY } from '../../u
 import Button from '../../components/Button/Button';
 import PageHeading from '../../components/PageHeading/PageHeading';
 import { RootState } from '../../store/store';
+import { getFirestore, collection, addDoc, doc, getDoc } from 'firebase/firestore';
+import { app } from "../../firebaseConfig";
+
+const firestore = getFirestore(app);
 
 const WorkoutPlan = () => {
   // state variables
@@ -19,183 +23,25 @@ const WorkoutPlan = () => {
   const [exerciseData, setExerciseData] = useState([]);
   const [updatedList, setUpdatedList] = useState([]);
   const myWorkouts = useSelector((state: RootState) => state.myWorkoutPlan.workouts);
+  const userId = useSelector((state: RootState) => state.login.userId);
   const [myWorkOutExercises, setMyWorkOutExercises] = useState([]);
 
-  console.log("myWorkOutExercises", myWorkOutExercises)
   // ui functions
 
-  const fetchWorkoutData = () => {
-    const workouts = [
-      {
-        workoutId: 1,
-        title: "back",
-        description: "targets back",
-        exercises: [
-          {
-            title: "lat pulldown",
-            id: 1
-          },
-          {
-            title: "deadlift",
-            id: 2
-          },
-          {
-            title: "one arm row",
-            id: 3
-          },
-          {
-            title: "pull over",
-            id: 4
-          },
-          {
-            title: "pull ups",
-            id: 5
-          }
-        ]
-      },
-      {
-        workoutId: 2,
-        title: "chest",
-        description: "targets chest",
-        exercises: [
-          {
-            title: "Incline bench press",
-            id: 1
-          },
-          {
-            title: "flat bench press",
-            id: 2
-          },
-          {
-            title: "Decline bench press",
-            id: 3
-          },
-          {
-            title: "cable",
-            id: 4
-          },
-          {
-            title: "push ups",
-            id: 5
-          }
-        ]
-      },
-      {
-        workoutId: 3,
-        title: "biceps",
-        description: "targets biceps",
-        exercises: [
-          {
-            title: "precher curl",
-            id: 1
-          },
-          {
-            title: "dumbell curl",
-            id: 2
-          },
-          {
-            title: "hammer curl",
-            id: 3
-          },
-          {
-            title: "cable row curl",
-            id: 4
-          },
-          {
-            title: "reverse grip curl",
-            id: 5
-          }
-        ]
-      },
-      {
-        workoutId: 4,
-        title: "triceps",
-        description: "targets triceps",
-        exercises: [
-          {
-            title: "close grip bench press",
-            id: 1
-          },
-          {
-            title: "pully push down",
-            id: 2
-          },
-          {
-            title: "overhead cable extension",
-            id: 3
-          },
-          {
-            title: "vertical dips",
-            id: 4
-          }
-        ]
-      },
-      {
-        workoutId: 5,
-        title: "shoulders",
-        description: "targets shoulders",
-        exercises: [
-          {
-            title: "overhead dumbell press",
-            id: 1
-          },
-          {
-            title: "front raises",
-            id: 2
-          },
-          {
-            title: "lateral raises",
-            id: 3
-          },
-          {
-            title: "real delts extension",
-            id: 4
-          }
-        ]
-      },
-      {
-        workoutId: 6,
-        title: "legs",
-        description: "targets legs",
-        exercises: [
-          {
-            title: "leg press",
-            id: 1
-          },
-          {
-            title: "weighted sqauts",
-            id: 2
-          },
-          {
-            title: "leg extension",
-            id: 3
-          },
-          {
-            title: "leg curls",
-            id: 4
-          },
-          {
-            title: "seated calves",
-            id: 5
-          }
-        ]
-      },
-      {
-        workoutId: 6,
-        title: "cardio",
-        description: "targets overall body and heart health",
-        exercises: [
-          {
-            title: "Treadmill",
-            id: 1
-          },
-          {
-            title: "Crossfit",
-            id: 2
-          }
-        ]
-      }
-    ]
+  // to add workout data to specific user ;
+  const addData = async () => {
+    const result = await addDoc(collection(firestore, `users/${userId}/workouts`,), {
+      workoutId: 1,
+      title: "back",
+      description: "targets back"
+    },);
+  }
+
+
+  const fetchWorkoutData = async () => {
+    const ref = doc(firestore, "workouts","gDEq2pOACmqr7twzXozQ");
+    const result = await getDoc(ref);
+    const workouts = result.data().workouts;
     setWorkOutData(workouts);
   }
   const optionSelectHandler = (selectedOption: string) => {
@@ -226,7 +72,8 @@ const WorkoutPlan = () => {
     if (updatedList.length === 0) {
       dispatch(showAlert(ADD_AT_LEAST_ONE_EXERCISE))
     }
-    dispatch(addWorkout({ title: exerciseData[0].title, exercises: updatedList }));
+    // dispatch(addWorkout({ title: exerciseData[0].title, exercises: updatedList }));
+    addData();
     setUpdatedList([]);
     dispatch(showAlert(EXERCISES_ADDED_SUCCESSFULLY))
   }

@@ -1,0 +1,60 @@
+/* src/MobileNavbar.css */
+
+.mobile-navbar {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    // position: fixed;
+    // top: 0;
+    // left: 0;
+    // z-index: 1000;
+}
+
+.mobile-navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-color);
+}
+
+.mobile-navbar-brand {
+    font-size: 17px;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+.mobile-navbar-toggle {
+    background-color: white;
+
+    .fa-bars-icon {
+        color: white;
+        background-color: transparent;
+        height: 25px;
+        width: 25px;
+    }
+}
+
+.mobile-navbar-menu {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary-color);
+    position: absolute;
+    top: 46px;
+    left: 0;
+    width: 100%;
+    border-top: 1px solid white;
+}
+
+.mobile-navbar-item {
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid #305275;
+    background-color: var(--primary-color);
+}
+
+.mobile-navbar-item:hover {
+    background-color: #001630;
+}

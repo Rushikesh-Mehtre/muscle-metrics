@@ -1,0 +1,55 @@
+.list-card-container {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+
+    .list-card-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 150px;
+
+        .list-card-heading {
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+    }
+
+    .card-list {
+
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .card-list-item {
+            padding: 7px 10px;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 4px;
+            background-color: #517eb3;
+
+            .item-title {
+                color: white;
+                text-transform: capitalize;
+
+
+            }
+
+            .plus-icon,
+            .minus-icon {
+                color: white;
+            }
+
+            &.already-added {
+                background-color: #174c8b;
+            }
+
+            &.not-added {
+                background-color: #517eb3
+            }
+        }
+    }
+}

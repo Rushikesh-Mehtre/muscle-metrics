@@ -1,0 +1,28 @@
+.button-container {
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    color: white;
+    padding: 5px;
+
+    &.small {
+        padding: 5px;
+
+    }
+
+    &.medium {
+        padding: 8px;
+
+    }
+
+    &.large {
+        padding: 10px;
+
+    }
+
+    &.disabled {
+        pointer-events: none;
+        background-color: #497aab;
+    }
+}

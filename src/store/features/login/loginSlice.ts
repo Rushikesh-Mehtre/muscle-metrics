@@ -2,26 +2,35 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface loginState {
-  isLoggedIn: boolean
+  isLoggedIn?: boolean,
+  userId?:string,
+  userName?:string,
 }
 
 const initialState: loginState = {
-    isLoggedIn: false,
+  isLoggedIn: false,
+  userId:"",
+  userName:""
 }
 
 export const loginSlice = createSlice({
-  name: 'counter',
+  name: 'login',
   initialState,
   reducers: {
-    login: (state) => {
+    login: (state,action) => {
+      console.log("action",action)
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.isLoggedIn = true
+      state.isLoggedIn = true;
+      state.userId = action.payload.userId;
+      state.userName = action.payload.userName
     },
     logout: (state) => {
-        state.isLoggedIn = false
+      state.isLoggedIn = false;
+      state.userId = "";
+      state.userName=""
     },
 
   },

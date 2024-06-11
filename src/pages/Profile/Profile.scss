@@ -1,0 +1,21 @@
+.profile-container {
+    padding: 15px;
+    padding-bottom: 40px;
+
+    .no-my-workouts-container {
+        padding-top: 100px;
+
+        .no-workout-label {
+            text-align: center;
+        }
+
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+    }
+
+    .my-workout-plan {
+        
+    }
+}

@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { showAlert } from '../../store/features/alert/alertSlice';
 import { ACCOUNT_CREATED_SUCCESSFULLY } from '../../utils/constants/app.constants';
 import { addDoc, collection, doc, getFirestore, setDoc } from 'firebase/firestore';
+import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
 const firestore = getFirestore(app)
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -29,6 +30,7 @@ const Register: React.FC = () => {
       dispatch(showAlert(ACCOUNT_CREATED_SUCCESSFULLY))
       return;
     }
+    dispatch(showLoader());
 
     try {
       const userCredential=  await createUserWithEmailAndPassword(auth, email, password);
@@ -42,10 +44,9 @@ const Register: React.FC = () => {
         // Add more fields as necessary
       };
       await addUserData(userData);
+      dispatch(hideLoader());
       dispatch(showAlert(ACCOUNT_CREATED_SUCCESSFULLY))
-      setTimeout(() => {
         navigate("/login");
-      }, 1500);
 
     } catch (error) {
       // setError((error as Error).message);

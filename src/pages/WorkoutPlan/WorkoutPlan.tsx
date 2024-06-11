@@ -13,6 +13,7 @@ import PageHeading from '../../components/PageHeading/PageHeading';
 import { RootState } from '../../store/store';
 import { getFirestore, collection, addDoc, doc, getDoc } from 'firebase/firestore';
 import { app } from "../../firebaseConfig";
+import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
 
 const firestore = getFirestore(app);
 
@@ -43,6 +44,7 @@ const WorkoutPlan = () => {
     const result = await getDoc(ref);
     const workouts = result.data().workouts;
     setWorkOutData(workouts);
+    dispatch(hideLoader());
   }
   const optionSelectHandler = (selectedOption: string) => {
     setExerciseData([]);
@@ -80,6 +82,7 @@ const WorkoutPlan = () => {
 
   // use-effect blocks
   useEffect(() => {
+    dispatch(showLoader())
     fetchWorkoutData();
   }, [])
 

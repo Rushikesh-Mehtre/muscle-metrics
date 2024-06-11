@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import { auth } from '../../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -34,18 +35,17 @@ const Login: React.FC = () => {
   }
 
   const loginHandler = async () => {
+    dispatch(showLoader());
 
     try {
       const loginUserCredentials = await signInWithEmailAndPassword(auth, username, password);
+      dispatch(hideLoader());
       const user = loginUserCredentials.user;
-      console.log("user",user);
-      dispatch(showAlert(LOGGED_IN_SUCCESSFULLY))
-      setTimeout(() => {
         dispatch(login({userId:user.uid}));
         navigate("/home");
-      }, 1500);
       // Handle successful login, e.g., redirect to another page
     } catch (error) {
+      dispatch(hideLoader());
       if (error.message === 'Firebase: Error (auth/invalid-credential).') {
         dispatch(showAlert(INVALID_CREDENTIALS))
       } else if (error.message === 'Firebase: Error (auth/invalid-email).') {

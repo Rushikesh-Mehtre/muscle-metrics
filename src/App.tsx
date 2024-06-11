@@ -10,12 +10,20 @@ import Alert from './components/Alert/Alert';
 import Footer from './components/Footer/Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import Loader from './components/Loader/Loader';
 
 function App() {
+
+
   const isLoggedIn = useSelector((state: RootState) => state.login.isLoggedIn);
   const isAlertVisible = useSelector((state: RootState) => state.alert.isAlertVisible);
+  const isLoaderVisible = 
+  useSelector((state: RootState) => state.loader.isLoaderVisible);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+
+
   useEffect(() => {
     if (!isLoggedIn) {
       // redirect to login page if user is NOT logged in
@@ -40,6 +48,7 @@ function App() {
       <div className="App">
         {isLoggedIn && <Navbar />}
         {isAlertVisible && <Alert />}
+        {isLoaderVisible && <Loader/> }
         <Outlet />
         {isLoggedIn && <Footer />}
       </div>

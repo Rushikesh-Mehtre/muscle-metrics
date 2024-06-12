@@ -42,12 +42,11 @@ const AccordionItem = (props:AccordionItemProps) => {
     exerciseCount,
     repCountHandler } = props;
 
-  const [repCount, setRepCount] = useState(0);
+  const repCount =  0;
   const addSetHandler = () => {
     handleCurrentSet(index, currentSet, repCount);
   }
   const handleRepCount = (repCount:string)=>{
-    console.log("repCount",repCount)
     repCountHandler(index,currentSet,repCount)
   }
   return (

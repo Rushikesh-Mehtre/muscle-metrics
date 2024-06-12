@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store/features/login/loginSlice';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebaseConfig';
 
 const links = [
   {
@@ -56,7 +58,8 @@ const Navbar: React.FC = () => {
   const linkClickHandler = (label:string)=>{
     toggleMenu();
     if(label==="Log out"){
-      dispatch(logout());
+      signOut(auth);
+      // dispatch(logout());
     }
   }
 

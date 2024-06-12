@@ -5,12 +5,14 @@ export interface loginState {
   isLoggedIn?: boolean,
   userId?:string,
   userName?:string,
+  userDocId?:string
 }
 
 const initialState: loginState = {
   isLoggedIn: false,
   userId:"",
-  userName:""
+  userName:"",
+  userDocId:""
 }
 
 export const loginSlice = createSlice({
@@ -24,13 +26,24 @@ export const loginSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       state.isLoggedIn = true;
-      state.userId = action.payload.userId;
-      state.userName = action.payload.userName
+      if(action.payload.userId){
+
+        state.userId = action.payload.userId;
+        }
+        if(action.payload.userName){
+
+          state.userName = action.payload.userName
+          }
+          if(action.payload.userDocId){
+
+            state.userDocId = action.payload.userDocId
+            }
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.userId = "";
       state.userName=""
+      state.userDocId=""
     },
 
   },

@@ -1,6 +1,6 @@
 import React from 'react'
-
-const ProgressTrackingCard = (props) => {
+import {ProgressTrackingCardProps} from "./ProgressTracking.d"
+const ProgressTrackingCard = (props:ProgressTrackingCardProps) => {
     const {exerciseName} = props;
   return (
     <div className='progress-tracking-card'>

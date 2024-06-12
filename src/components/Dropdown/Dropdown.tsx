@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import "./Dropdown.scss"
-const Dropdown = ({ labelHeading,options,optionSelectHandler }) => {
-  
-  const handleChange = (event) => {
+import {DropdownProps} from "./Dropdown.d"
+const Dropdown = (props:DropdownProps) => {
+  const { labelHeading,options,optionSelectHandler } = props
+  const handleChange = (event:any) => {
     optionSelectHandler(event.target.value);
   };
   useEffect(()=>{

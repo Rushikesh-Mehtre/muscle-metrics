@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import loginReducer from './features/login/loginSlice'
 import alertReducer from './features/alert/alertSlice'
 import myWorkoutPlanReducer from './features/my-workout-plan/myWorkoutPlanSlice'
+import loaderReducer from './features/loading/loadingSlice'
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import { thunk } from 'redux-thunk';
@@ -13,7 +14,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   login: loginReducer,
   alert: alertReducer,
-  myWorkoutPlan:myWorkoutPlanReducer
+  myWorkoutPlan:myWorkoutPlanReducer,
+  loader:loaderReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

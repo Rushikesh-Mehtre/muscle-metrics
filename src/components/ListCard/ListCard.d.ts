@@ -1,14 +1,15 @@
 export interface listItem {
     title: string,
-    id: number
+    id: string
 }
 export interface ListCardProps {
     cardHeading: string,
     cardList: listItem[]
-    addToListHandler?: () => void;
-    removeFromListHandler?: () => void;
+    addToListHandler?: (listItem:listItem) => void;
+    removeFromListHandler?: (listItem:listItem) => void;
     updatedList?:listItem[]
     editable:boolean,
     deleteWorkout?:any
-    canBeDeleted?:boolean
+    canBeDeleted?:boolean,
+    myWorkOutExercises?:any
 }

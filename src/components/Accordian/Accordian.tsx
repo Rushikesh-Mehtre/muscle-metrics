@@ -1,13 +1,15 @@
-// src/components/Accordion.js
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import "./Accordian.scss"
 import Button from '../Button/Button';
-const Accordion = ({ items, handleCurrentSet ,repCountHandler}) => {
-  const [activeIndex, setActiveIndex] = useState(null);
+import {AccordionItemProps,AccordionProps} from "./Accordian.d"
 
-  const handleItemClick = (index) => {
-    setActiveIndex(index === activeIndex ? null : index);
+const Accordion = (props:AccordionProps) => {
+  const { items, handleCurrentSet ,repCountHandler} = props;
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  const handleItemClick = (index:number) => {
+    setActiveIndex(index === activeIndex ? -1 : index);
   };
 
   return (
@@ -29,12 +31,23 @@ const Accordion = ({ items, handleCurrentSet ,repCountHandler}) => {
   );
 };
 
-const AccordionItem = ({ index, isActive, title, currentSet, onClick, handleCurrentSet, exerciseCount,repCountHandler }) => {
+const AccordionItem = (props:AccordionItemProps) => {
+  const { 
+    index, 
+    isActive, 
+    title, 
+    currentSet, 
+    onClick, 
+    handleCurrentSet, 
+    exerciseCount,
+    repCountHandler } = props;
+
   const [repCount, setRepCount] = useState(0);
   const addSetHandler = () => {
-    handleCurrentSet(index, currentSet, repCount,);
+    handleCurrentSet(index, currentSet, repCount);
   }
-  const handleRepCount = (repCount)=>{
+  const handleRepCount = (repCount:string)=>{
+    console.log("repCount",repCount)
     repCountHandler(index,currentSet,repCount)
   }
   return (

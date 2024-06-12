@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './login.scss';
 import { useDispatch } from 'react-redux';
 import { showAlert } from '../../store/features/alert/alertSlice';
-import { ACCOUNT_DOES_NOT_EXIST, FEATURE_WILL_BE_ADDED_SOON, INVALID_CREDENTIALS, LOGGED_IN_SUCCESSFULLY } from '../../utils/constants/app.constants';
-import { login, logout } from '../../store/features/login/loginSlice';
+import { ACCOUNT_DOES_NOT_EXIST, INVALID_CREDENTIALS} from '../../utils/constants/app.constants';
+import { login } from '../../store/features/login/loginSlice';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
-import { auth } from '../../firebaseConfig';
+import { app, auth } from '../../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
+import {  getFirestore } from 'firebase/firestore';
+const firestore = getFirestore(app);
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -34,18 +37,18 @@ const Login: React.FC = () => {
   }
 
   const loginHandler = async () => {
+    dispatch(showLoader());
 
     try {
       const loginUserCredentials = await signInWithEmailAndPassword(auth, username, password);
+      dispatch(hideLoader());
       const user = loginUserCredentials.user;
-      console.log("user",user);
-      dispatch(showAlert(LOGGED_IN_SUCCESSFULLY))
-      setTimeout(() => {
+      console.log("user",user)
         dispatch(login({userId:user.uid}));
         navigate("/home");
-      }, 1500);
       // Handle successful login, e.g., redirect to another page
-    } catch (error) {
+    } catch (error:any) {
+      dispatch(hideLoader());
       if (error.message === 'Firebase: Error (auth/invalid-credential).') {
         dispatch(showAlert(INVALID_CREDENTIALS))
       } else if (error.message === 'Firebase: Error (auth/invalid-email).') {
@@ -59,6 +62,7 @@ const Login: React.FC = () => {
       }
     }
   }
+
 
   return (
     <div className="login-container">

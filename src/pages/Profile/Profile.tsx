@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect, useState } from 'react'
 import Button from '../../components/Button/Button'
 import { RootState } from '../../store/store';

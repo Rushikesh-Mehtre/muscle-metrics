@@ -6,11 +6,9 @@ import { ACCOUNT_DOES_NOT_EXIST, INVALID_CREDENTIALS} from '../../utils/constant
 import { login } from '../../store/features/login/loginSlice';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
-import { app, auth } from '../../firebaseConfig';
+import { auth } from '../../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
-import {  getFirestore } from 'firebase/firestore';
-const firestore = getFirestore(app);
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');

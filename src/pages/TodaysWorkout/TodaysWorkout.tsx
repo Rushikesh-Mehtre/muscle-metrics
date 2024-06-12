@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect, useState } from 'react'
 import Dropdown from '../../components/Dropdown/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';

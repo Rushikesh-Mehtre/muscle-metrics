@@ -9,7 +9,7 @@ export interface ListCardProps {
     removeFromListHandler?: (listItem:listItem) => void;
     updatedList?:listItem[]
     editable:boolean,
-    deleteWorkout?:any
+    deleteWorkout:(exerciseDocId:string)=>void
     canBeDeleted?:boolean,
     myWorkOutExercises?:any
 }

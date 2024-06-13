@@ -4,7 +4,7 @@
     width: 100%;
     background-color: var(--primary-color);
     color: white;
-    padding: 10px 20px;
+    padding: 15px 20px;
     // position: fixed;
     // top: 0;
     // left: 0;
@@ -23,17 +23,23 @@
     background-color: var(--primary-color);
     color: white;
     font-weight: bold;
+
+
 }
 
-.mobile-navbar-toggle {
-    background-color: white;
+.navbar-icon-1 {
+    height: 25px;
+    width: 25px;
+    fill: white;
+    position: relative;
+    top: 2px;
+    right: 2px;
+}
 
-    .fa-bars-icon {
-        color: white;
-        background-color: transparent;
-        height: 25px;
-        width: 25px;
-    }
+.navbar-icon-2 {
+    height: 27px;
+    width: 27px;
+    fill: white;
 }
 
 .mobile-navbar-menu {
@@ -41,7 +47,7 @@
     flex-direction: column;
     background-color: var(--primary-color);
     position: absolute;
-    top: 46px;
+    top: 58px;
     left: 0;
     width: 100%;
     border-top: 1px solid white;

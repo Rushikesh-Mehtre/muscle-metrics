@@ -10,11 +10,17 @@
         display: flex;
         justify-content: space-between;
         gap: 150px;
+        align-items: center;
 
         .list-card-heading {
             font-size: 20px;
             font-weight: bold;
             text-transform: capitalize;
+        }
+
+        .delete-icon {
+            height: 25px;
+            width: 25px;
         }
     }
 

@@ -10,16 +10,12 @@ const ListCard = (props: ListCardProps) => {
     const { cardHeading, cardList, addToListHandler, removeFromListHandler, updatedList, editable, deleteWorkout, canBeDeleted, myWorkOutExercises } = props;
 
     console.log("myWorkOutExercises", myWorkOutExercises)
-
-    const deleteMyWorkOutHandler = (workOutToDelete: string) => {
-        deleteWorkout(workOutToDelete)
-    }
     return (
         <div className='list-card-container'>
             <div className='list-card-header'>
                 <p className='list-card-heading'>{cardHeading}</p>
                 {canBeDeleted &&
-                    <AiFillDelete onClick={() => deleteMyWorkOutHandler(cardHeading)} className='delete-icon' />}
+                    <AiFillDelete onClick={() => deleteWorkout()} className='delete-icon' />}
             </div>
             {
                 cardList && cardList.length > 0 && editable &&

@@ -3,22 +3,21 @@ import { listItem, ListCardProps } from "./ListCard.d"
 import "./ListCard.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import Button from '../Button/Button';
+import { AiFillDelete } from "react-icons/ai";
 
 
 const ListCard = (props: ListCardProps) => {
-    const { cardHeading, cardList, addToListHandler, removeFromListHandler, updatedList, editable, deleteWorkout, canBeDeleted, myWorkOutExercises } = props;
+    const { cardHeading, cardList, addToListHandler, removeFromListHandler, updatedList, editable, deleteWorkout, canBeDeleted, myWorkOutExercises,exerciseDocId } = props;
 
     console.log("myWorkOutExercises", myWorkOutExercises)
-
-    const deleteMyWorkOutHandler = (workOutToDelete: string) => {
-        deleteWorkout(workOutToDelete)
-    }
     return (
         <div className='list-card-container'>
             <div className='list-card-header'>
                 <p className='list-card-heading'>{cardHeading}</p>
-                {canBeDeleted && <Button buttonTitle='Delete' size="small" onClick={() => deleteMyWorkOutHandler(cardHeading)} />}
+                {canBeDeleted && exerciseDocId &&
+                    <AiFillDelete 
+                    onClick={() => deleteWorkout && deleteWorkout(exerciseDocId)} 
+                    className='delete-icon' />}
             </div>
             {
                 cardList && cardList.length > 0 && editable &&

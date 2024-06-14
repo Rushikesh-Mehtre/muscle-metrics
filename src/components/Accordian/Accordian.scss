@@ -79,6 +79,8 @@
       &:nth-child(1) {
         text-align: left;
       }
+
+
     }
   }
 
@@ -92,9 +94,22 @@
       flex: 1;
       text-align: center;
 
+      .add-icon {
+        height: 35px;
+        width: 35px;
+        position: relative;
+        left: 14px;
+
+        &.disabled {
+          pointer-events: none;
+          opacity: 0.75;
+        }
+      }
+
       &:nth-child(1) {
         text-align: left;
       }
+
     }
   }
 

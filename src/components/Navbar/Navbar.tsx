@@ -1,53 +1,50 @@
 import React, { useState } from 'react';
 import './Navbar.scss';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../store/features/login/loginSlice';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
+import { FaBars } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
 
 const links = [
   {
-      id:1,
-      path:"/home",
-      label:"Home",
+    id: 1,
+    path: "/home",
+    label: "Home",
   },
   {
-      id:1,
-      path:"/todays-workout",
-      label:"Today's Workout",
+    id: 1,
+    path: "/todays-workout",
+    label: "Today's Workout",
   },
   {
-      id:2,
-      path:"/profile",
-      label:"Profile",
+    id: 2,
+    path: "/profile",
+    label: "Profile",
   },
   {
-      id:3,
-      path:"/workout-plan",
-      label:"Workout Plans",
+    id: 3,
+    path: "/workout-plan",
+    label: "Workout Plans",
   },
   {
-      id:4,
-      path:"/about",
-      label:"About",
+    id: 4,
+    path: "/about",
+    label: "About",
   },
   {
-      id:5,
-      path:"/progress",
-      label:"Progress",
+    id: 5,
+    path: "/progress",
+    label: "Progress",
   },
   {
-      id:6,
-      path:"/login",
-      label:"Log out",
+    id: 6,
+    path: "/login",
+    label: "Log out",
   },
 ]
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const dispatch = useDispatch();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -55,9 +52,9 @@ const Navbar: React.FC = () => {
 
 
 
-  const linkClickHandler = (label:string)=>{
+  const linkClickHandler = (label: string) => {
     toggleMenu();
-    if(label==="Log out"){
+    if (label === "Log out") {
       signOut(auth);
       // dispatch(logout());
     }
@@ -67,13 +64,13 @@ const Navbar: React.FC = () => {
     <header className="mobile-navbar">
       <div className="mobile-navbar-container">
         <div className="mobile-navbar-brand">Muscle Metrics</div>
-        <div className="mobile-navbar-toggle" onClick={toggleMenu}>
-        <FontAwesomeIcon icon={faBars} className='fa-bars-icon' />
+        <div onClick={toggleMenu}>
+          {isOpen ? <ImCross className='navbar-icon-1' /> : <FaBars className='navbar-icon-2' />}
         </div>
       </div>
       {isOpen && (
         <nav className="mobile-navbar-menu">
-            {links.map((item)=><Link to={item.path} key={item.id} onClick={()=>linkClickHandler(item.label)} className='mobile-navbar-item'>{item.label}</Link>)}
+          {links.map((item) => <Link to={item.path} key={item.id} onClick={() => linkClickHandler(item.label)} className='mobile-navbar-item'>{item.label}</Link>)}
         </nav>
       )}
     </header>

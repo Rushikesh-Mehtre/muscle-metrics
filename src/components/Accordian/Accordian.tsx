@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import "./Accordian.scss"
-import Button from '../Button/Button';
 import {AccordionItemProps,AccordionProps} from "./Accordian.d"
+import { IoIosAdd } from "react-icons/io";
 
 const Accordion = (props:AccordionProps) => {
   const { items, handleCurrentSet ,repCountHandler} = props;
@@ -68,7 +68,7 @@ const AccordionItem = (props:AccordionItemProps) => {
               <input className={`input-item ${index+1 !== currentSet?'disabled':''}`} type="number" onChange={(e) => handleRepCount(e.target.value)} value={item.repCount} disabled={index+1 !== currentSet} />              
               <div className='item'>
               {exerciseCount.length === index + 1 &&
-                <Button buttonTitle='Add' onClick={addSetHandler} disabled={!item.repCount}   />
+              <IoIosAdd onClick={addSetHandler}  className={`add-icon ${!item.repCount?'disabled':''}`} />
                 }
               </div>
             </div>

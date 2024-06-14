@@ -9,6 +9,7 @@
 
 .App {
   height: 100vh;
+  overflow-y: hidden;
 }
 
 /* to keep application for mobiles only */

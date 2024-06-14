@@ -22,13 +22,12 @@ const WorkoutPlan = () => {
   const dispatch = useDispatch();
   const [workoutData, setWorkOutData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
-  console.log("exerciseData",exerciseData)
   const [updatedList, setUpdatedList] = useState([]);
-  console.log("updatedList",updatedList)
   const myWorkouts = useSelector((state: RootState) => state.myWorkoutPlan.workouts);
   const userDocId = useSelector((state: RootState) => state.login.userDocId);
   const [myWorkOutExercises, setMyWorkOutExercises] = useState([]);
   const [selectedOption,setSelectionOption]=useState("");
+  
 
   // ui functions
 
@@ -40,7 +39,8 @@ const WorkoutPlan = () => {
           exercises : updatedList
       }
     );
-    console.log("result",result);
+    console.log("result",result)
+
     dispatch(showAlert(EXERCISES_ADDED_SUCCESSFULLY))
 
   }

@@ -20,8 +20,9 @@ const Register: React.FC = () => {
   const dispatch = useDispatch();
 
   const addUserData = async (data: any) => {
-  const result = await addDoc(collection(firestore,"users"),data)
+  const result = await addDoc(collection(firestore,"users"),data);
   console.log("result",result)
+
   };
 
   const handleRegister = async () => {
@@ -34,7 +35,6 @@ const Register: React.FC = () => {
     try {
       const userCredential=  await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log("user",user);
       const userData = {
         email: user.email,
         createdAt: new Date(),

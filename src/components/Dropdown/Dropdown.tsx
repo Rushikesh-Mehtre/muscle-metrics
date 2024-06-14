@@ -14,7 +14,7 @@ const Dropdown = (props:DropdownProps) => {
   return (
     <div className="dropdown-container">
       <label htmlFor="dropdown" >
-        {labelHeading}
+        {labelHeading && labelHeading}
       </label>
       <select
         id="dropdown"

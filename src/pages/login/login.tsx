@@ -41,7 +41,6 @@ const Login: React.FC = () => {
       const loginUserCredentials = await signInWithEmailAndPassword(auth, username, password);
       dispatch(hideLoader());
       const user = loginUserCredentials.user;
-      console.log("user",user)
         dispatch(login({userId:user.uid}));
         navigate("/home");
       // Handle successful login, e.g., redirect to another page

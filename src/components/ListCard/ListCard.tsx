@@ -7,15 +7,17 @@ import { AiFillDelete } from "react-icons/ai";
 
 
 const ListCard = (props: ListCardProps) => {
-    const { cardHeading, cardList, addToListHandler, removeFromListHandler, updatedList, editable, deleteWorkout, canBeDeleted, myWorkOutExercises } = props;
+    const { cardHeading, cardList, addToListHandler, removeFromListHandler, updatedList, editable, deleteWorkout, canBeDeleted, myWorkOutExercises,exerciseDocId } = props;
 
     console.log("myWorkOutExercises", myWorkOutExercises)
     return (
         <div className='list-card-container'>
             <div className='list-card-header'>
                 <p className='list-card-heading'>{cardHeading}</p>
-                {canBeDeleted &&
-                    <AiFillDelete onClick={() => deleteWorkout()} className='delete-icon' />}
+                {canBeDeleted && exerciseDocId &&
+                    <AiFillDelete 
+                    onClick={() => deleteWorkout && deleteWorkout(exerciseDocId)} 
+                    className='delete-icon' />}
             </div>
             {
                 cardList && cardList.length > 0 && editable &&

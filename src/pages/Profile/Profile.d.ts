@@ -7,4 +7,5 @@ export interface myWorkoutObj {
     exerciseName:string,
     exercises : exerciseObj[]
     DocumentData:any
+    exerciseDocId:string
 }

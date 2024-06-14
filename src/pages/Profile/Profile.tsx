@@ -93,8 +93,8 @@ const Profile = () => {
                 cardHeading={item.exerciseName}
                 cardList={item.exercises}
                 editable={false}
-                      // @ts-ignore
-                deleteWorkout={() => deleteWorkout(item.exerciseDocId)}
+                exerciseDocId={item.exerciseDocId}
+                deleteWorkout={deleteWorkout}
                 canBeDeleted={true}
               />)}
             </div>

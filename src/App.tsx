@@ -55,9 +55,7 @@ function App() {
     
     if(isLoggedIn){
       const querySnapshot = await getDocs(collection(db, "users"));
-      console.log("querySnapshot.docs", querySnapshot.docs)
       const data : userDataObj[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log("data", data);
       const currentUserData = data.filter((item)=>item.userId === userId);
       dispatch(login({ userDocId: currentUserData[0].id ,userName:currentUserData[0].userName}));
     }
@@ -71,7 +69,6 @@ function App() {
   useEffect(()=>{
 onAuthStateChanged(auth, (user)=>{
   if(user){
-    console.log("user",user);
     // user is logged in 
   }else{
     // user is logged out

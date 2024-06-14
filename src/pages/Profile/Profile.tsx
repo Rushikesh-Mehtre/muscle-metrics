@@ -23,7 +23,8 @@ const Profile = () => {
   const userName = useSelector((state: RootState) => state.login.userName);
   const userDocId = useSelector((state: RootState) => state.login.userDocId);
   const [myWorkoutData, setMyWorkoutData] = useState<myWorkoutObj[]>([]);
-  console.log("myWorkoutData", myWorkoutData);
+
+  console.log("myWorkoutData",myWorkoutData)
   // ui functions
   const goToWorkoutPlan = () => {
     navigate('/workout-plan')
@@ -35,8 +36,8 @@ const Profile = () => {
     // use this path to delete specific document 
 
     const results = await deleteDoc(doc(db, `users/${userDocId}/workouts`, exerciseDocId));
-    console.log("results", results)
     getUserData();
+    console.log("results",results)
 
     // to delete specific workout collection under workouts document under specific user document under user collection
 
@@ -51,13 +52,10 @@ const Profile = () => {
     const querySnapshot = await getDocs(q);
     dispatch(hideLoader());
     let myWorkOutData: myWorkoutObj[] = [];
-    console.log("querySnapshot", querySnapshot)
     querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data()}`);
       // doc.data() is never undefined for query doc snapshots
       // @ts-ignore
       const workoutDataObj: myWorkoutObj = { exerciseDocId: doc.id, ...doc.data() };
-      console.log("workoutDataObj", workoutDataObj);
       myWorkOutData.push(workoutDataObj);
     });
     setMyWorkoutData(myWorkOutData);

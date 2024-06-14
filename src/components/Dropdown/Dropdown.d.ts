@@ -6,11 +6,11 @@ export interface exerciseObj{
 export interface optionItem{
     id:string,
     title:string,
-    description:string,
-    exercises:exerciseObj[]
+    description?:string,
+    exercises?:exerciseObj[]
 }
 export interface DropdownProps {
-    labelHeading:string,
+    labelHeading?:string,
     options:optionItem[],
     optionSelectHandler : (selectedOption:string)=>void
 }

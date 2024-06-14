@@ -51,3 +51,13 @@ export const ACCOUNT_DOES_NOT_EXIST = {
     subHeading:"Please create account to continue",
     duration:1500
 }
+export const EXERCISE_DATA_ADDED_SUCCESSFULLY = {
+    heading:"Success !",
+    subHeading:"Exercise data added successfully",
+    duration:1500
+}
+export const REMOVE_OR_ADD_OPEN_FIELD_MSG = {
+    heading:"Cant proceed",
+    subHeading:"Remove or add the last added reps and weights",
+    duration:1500
+}

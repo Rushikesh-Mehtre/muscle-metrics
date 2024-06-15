@@ -7,12 +7,13 @@ import { RootState } from '../../store/store';
 import { useNavigate } from 'react-router-dom';
 import "./TodaysWorkout.scss"
 import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
-import { addDoc, collection, getDocs, getFirestore, query } from 'firebase/firestore';
+import { addDoc, collection, getDocs, getFirestore, limit, orderBy, query } from 'firebase/firestore';
 import { app, db } from '../../firebaseConfig';
 import { myWorkoutObj } from "./TodaysWorkout.d"
 import RepCountWeightInput from '../../components/RepCountWeightInput/RepCountWeightInput';
 import { showAlert } from '../../store/features/alert/alertSlice';
 import { EXERCISE_DATA_ADDED_SUCCESSFULLY, REMOVE_OR_ADD_OPEN_FIELD_MSG } from '../../utils/constants/app.constants';
+import WeightRepTrackModalComponent from '../../components/WeightRepTrackModalComponent/WeightRepTrackModalComponent';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
@@ -93,6 +94,7 @@ const TodaysWorkout = () => {
   console.log("entries",entries)
   const [showCurrentEntryFields, setShowCurrentEntryFields] = useState(true);
   const handleAddEntry = (setNo: number, repCount: number, weight: number) => {
+    setDataAddedToServer(false);
     const newEntry = { setNo, repCount, weight };
     setEntries([...entries, newEntry]);
     // Here you can call your API
@@ -113,15 +115,17 @@ const TodaysWorkout = () => {
       {
           exerciseName :selectedExercise,
           exercisesTrackingArr : entries,
-          addedAt :new Date().toLocaleDateString('en-GB')
+          createdAt :new Date().toISOString()
       }
     );
-    console.log("result",result)
+    console.log("result",result);
+    setDataAddedToServer(true)
     dispatch(hideLoader())
     dispatch(showAlert(EXERCISE_DATA_ADDED_SUCCESSFULLY)) 
    }
 
   const optionSelectHandler = (selectedOption: string) => {
+
     setSelectedWorkout(selectedOption);
     setEntries([]);
     console.log("myWorkouts", myWorkouts)
@@ -145,26 +149,80 @@ const TodaysWorkout = () => {
         setSelectedWorkoutDocId(workoutsArr[0].id)
         }      
     }
-  }, [myWorkouts,selectedWorkout])
+  }, [myWorkouts,selectedWorkout]);
 
+  const[dataAddedToServer,setDataAddedToServer]=useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+  const [dataForModal,setDataForModal]=useState({});
+  console.log("dataForModal",dataForModal)
+  const modalDataHandler = async (dataId:string)=>{
+    console.log("dataId",dataId);
+    const q = query(collection(db, `users/${userDocId}/workouts/${dataId}/${selectedExercise}`), orderBy('createdAt', 'desc'), limit(1));
+    const querySnapshot1 = await getDocs(q);
+    console.log("latestDoc1",)
+    // get user data
+          // @ts-ignore
+    let lastAddedWorkout = [];
+    querySnapshot1.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      // @ts-ignore
+      const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data() };
+      lastAddedWorkout.push(workoutDataObj);
+
+    });
+    // @ts-ignore
+    console.log("lastAddedWorkout",lastAddedWorkout)
+                                    // @ts-ignore
+    setDataForModal(lastAddedWorkout[0])
+    handleOpenModal();
+
+    
+  }
+
+  console.log("mySelectedWorkouts",mySelectedWorkouts)
   return (
     <div className='todays-workout-container'>
       <div className='header'>
-        <p>Select Today's workout </p>
+        <div className='heading-data'>
+          <p className='left'>Select Today's workout</p>
+         {selectedWorkout && mySelectedWorkouts.length > 0 &&  <button onClick={()=>modalDataHandler(selectedWorkoutDocId)}>Check your last {selectedWorkout} workout </button>}
+        </div>
+        <p> </p>
         {workOutList.length > 0 && <Dropdown
               // @ts-ignore
           options={workOutList}
-          optionSelectHandler={optionSelectHandler} />
+          optionSelectHandler={optionSelectHandler}
+                                          // @ts-ignore
+          dataAddedToServer={dataAddedToServer}
+                                          // @ts-ignore
+          singleEntryPresent={entries.length>0}
+          />
           }
 
         {
           mySelectedWorkouts.length > 0 ?
             <>
-              <p>Select exercise </p>
+             <div className='heading-data'>
+          <p className='left'>Select exercise </p>
+          {selectedExercise && <button  onClick={()=>modalDataHandler(selectedWorkoutDocId)}>Check your last {selectedExercise} workout </button>}
+        </div>
+            
               <Dropdown
                 // @ts-ignore
                 options={mySelectedWorkouts[0].exercises}
-                optionSelectHandler={optionSelectHandler1} />
+                optionSelectHandler={optionSelectHandler1} 
+                                // @ts-ignore
+                dataAddedToServer={dataAddedToServer}
+                                // @ts-ignore
+                singleEntryPresent={entries.length>0}
+                />
 
             </>
             :
@@ -213,6 +271,15 @@ const TodaysWorkout = () => {
       </div>
 
       }
+
+<WeightRepTrackModalComponent 
+showModal={showModal} 
+handleClose={handleCloseModal} 
+                                // @ts-ignore
+data={dataForModal.exercisesTrackingArr} 
+                                // @ts-ignore
+date={dataForModal.createdAt?.slice(0,10)}
+/>
 
     </div>
   )

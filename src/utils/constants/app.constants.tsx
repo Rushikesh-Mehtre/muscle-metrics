@@ -66,3 +66,8 @@ export const WORKOUT_UPDATED_SUCCESSFULLY = {
     subHeading:"Workout updated successfully.",
     duration:1500
 }
+export const PLEASE_SAVE_DATA_BEFORE_PROCEEDING = {
+    heading:"Oops",
+    subHeading:"Please save data before proceeding.",
+    duration:1500
+}

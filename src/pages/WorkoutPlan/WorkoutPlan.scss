@@ -1,3 +1,94 @@
-.workout-plan-container{
+.workout-plan-container {
     padding: 15px;
+
+    .select-workout-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: center;
+
+        select {
+            width: 200px;
+            height: 30px;
+            border-radius: 4px;
+        }
+    }
+
+    .select-exercise-container {
+
+        margin: 20px 0;
+
+        .header {
+            margin-bottom: 10px;
+        }
+
+        .item-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Item */
+        .item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+
+            &.selected {
+                background-color: #f0f0f0;
+
+            }
+
+            input {
+                height: 20px;
+                width: 20px;
+            }
+        }
+
+        .item:hover {
+            // background-color: #f0f0f0;
+        }
+
+        /* Checkbox */
+        .checkbox {
+            margin-right: 10px;
+        }
+    }
+
+
+    .btn-container {
+        display: flex;
+        justify-content: flex-end;
+
+        /* Add Button */
+        .add-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 10px 0;
+        }
+
+        .add-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .add-button:not(:disabled):hover {
+            background-color: #218838;
+        }
+    }
+
+
+
 }

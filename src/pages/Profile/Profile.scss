@@ -15,7 +15,61 @@
 
     }
 
-    .my-workout-plan {
-        
+    .my-workout-plan {}
+
+    .select-exercise-container {
+
+        margin: 20px 0;
+
+        .header {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+
+            .btn-container {
+                display: flex;
+                gap: 10px;
+            }
+        }
+
+        .item-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Item */
+        .item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background-color: #f0f0f0;
+
+            &.selected {
+                background-color: #f0f0f0;
+
+            }
+
+            input {
+                height: 20px;
+                width: 20px;
+            }
+        }
+
+        .item:hover {
+            // background-color: #f0f0f0;
+        }
+
+        /* Checkbox */
+        .checkbox {
+            margin-right: 10px;
+        }
     }
 }

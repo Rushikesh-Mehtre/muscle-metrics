@@ -61,3 +61,8 @@ export const REMOVE_OR_ADD_OPEN_FIELD_MSG = {
     subHeading:"Remove or add the last added reps and weights",
     duration:1500
 }
+export const WORKOUT_UPDATED_SUCCESSFULLY = {
+    heading:"Success",
+    subHeading:"Workout updated successfully.",
+    duration:1500
+}

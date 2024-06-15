@@ -1,16 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import React, { useEffect } from 'react';
+import React, {  useState } from 'react';
 import "./Dropdown.scss"
 import {DropdownProps} from "./Dropdown.d"
+import { useDispatch } from 'react-redux';
+import { showAlert } from '../../store/features/alert/alertSlice';
+import { PLEASE_SAVE_DATA_BEFORE_PROCEEDING } from '../../utils/constants/app.constants';
 const Dropdown = (props:DropdownProps) => {
-  const { labelHeading,options,optionSelectHandler } = props
+  const dispatch = useDispatch();
+  const { labelHeading,options,optionSelectHandler,dataAddedToServer ,singleEntryPresent} = props
   const handleChange = (event:any) => {
-    optionSelectHandler(event.target.value);
+    if(!dataAddedToServer && singleEntryPresent){
+      dispatch(showAlert(PLEASE_SAVE_DATA_BEFORE_PROCEEDING));
+      return;
+    }else{
+      setSelectedValue(event.target.value)
+      optionSelectHandler(event.target.value);
+      }
   };
-  useEffect(()=>{
-    optionSelectHandler(options[0].title);
-  },[])
+  const [selectedValue,setSelectedValue]=useState("")
   return (
     <div className="dropdown-container">
       <label htmlFor="dropdown" >
@@ -20,8 +28,10 @@ const Dropdown = (props:DropdownProps) => {
         id="dropdown"
         name="dropdown"
         onChange={handleChange}
+        value={selectedValue}
         
       >
+        <option value="" disabled>--Select--</option>
         {options.map((option, index) => (
           <option key={index} value={option.title}>
             {option.title}

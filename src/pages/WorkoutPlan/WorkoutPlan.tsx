@@ -81,8 +81,15 @@ const WorkoutPlan = () => {
   }
         // @ts-ignore
   const optionSelectHandler = (e) => {
-    dispatch(showLoader());
+
     const selectedOption = e.target.value;
+    if(!selectedOption){
+      setSelectionOption("");
+      setExerciseData([]);
+      
+      return
+    }
+    dispatch(showLoader());
     setSelectionOption(selectedOption)
     setExerciseData([]);
     // @ts-ignore
@@ -129,7 +136,7 @@ const WorkoutPlan = () => {
       <div className='select-workout-container'>
         <label htmlFor="workout">Select Workout</label>
         <select id="workout" onChange={optionSelectHandler} className="dropdown">
-          <option value="" disabled>--Select--</option>
+          <option value="">--Select--</option>
           {workoutData.map((item) => (
                   // @ts-ignore
                     // @ts-ignore

@@ -66,14 +66,14 @@ const Profile = () => {
     dispatch(showLoader());
     getUserData();
   }, []);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const handleItemSelection = (item: string) => {
-    const selectedItemArr = selectedItems;
-          // @ts-ignore
-    const finalSelectedArr = selectedItems.map((item) => item.title).includes(item.title) ? selectedItems.filter((item1) => item1.title !== item.title) : [...selectedItemArr, item]
-    setSelectedItems(finalSelectedArr);
+  // const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  // const handleItemSelection = (item: string) => {
+  //   const selectedItemArr = selectedItems;
+  //         // @ts-ignore
+  //   const finalSelectedArr = selectedItems.map((item) => item.title).includes(item.title) ? selectedItems.filter((item1) => item1.title !== item.title) : [...selectedItemArr, item]
+  //   setSelectedItems(finalSelectedArr);
 
-  };
+  // };
   // const [exerciseIdToEdit, setExerciseIdToEdit] = useState("");
   return (
     <>
@@ -105,18 +105,18 @@ const Profile = () => {
                 {workOutItem.exercises.map((item) => (
                   <div key={item.title} 
                         // @ts-ignore
-                  className={`item ${selectedItems.map((item) => item.title).includes(item.title) ? 'selected' : ''}`} 
+                  className={`item`} 
                   // onClick={() => handleItemSelection(item)}
                   >
                   {/* { exerciseIdToEdit===workOutItem.exerciseDocId &&  */}
-                  <input
+                  {/* <input
                       type="checkbox"
                             // @ts-ignore
                       checked={selectedItems.map((item) => item.title).includes(item.title)}
                             // @ts-ignore
                       onChange={() => handleItemSelection(item)}
                       className="checkbox"
-                    />
+                    /> */}
                     {/* } */}
                     {item.title}
                   </div>

@@ -32,15 +32,6 @@ const RepCountWeightInput: React.FC<RepCountWeightInputProps> = ({ setNo, onAdd,
         <tr className='rep-count-weight-input-container'>
             <td>{setNo}</td>
             <td>
-                <input
-                    type="number"
-                    maxLength={2}
-                    value={repCount}
-                      onChange={handleRepCountChange}
-          max="100"
-                />
-            </td>
-            <td>
                 <select
                     value={weight}
                     onChange={(e) => setWeight(Number(e.target.value))}
@@ -52,6 +43,16 @@ const RepCountWeightInput: React.FC<RepCountWeightInputProps> = ({ setNo, onAdd,
                     ))}
                 </select>
             </td>
+            <td>
+                <input
+                    type="number"
+                    maxLength={2}
+                    value={repCount}
+                      onChange={handleRepCountChange}
+          max="100"
+                />
+            </td>
+          
             <td>
                 <div className='icon-container'>
 

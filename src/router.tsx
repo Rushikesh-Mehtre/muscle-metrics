@@ -14,6 +14,8 @@ export const router = createBrowserRouter([
     {
       path: "/",
       element: <App/>,
+      
+      
       children:[
         {
           path:'login',
@@ -51,6 +53,6 @@ export const router = createBrowserRouter([
           path:'*',
           element:<PageNotFound/>
         },
-      ]
+      ],
     },
   ]);

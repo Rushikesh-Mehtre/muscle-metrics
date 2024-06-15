@@ -46,7 +46,8 @@ const workOutList = [
 const TodaysWorkout = () => {
   const [myWorkouts, setMyWorkouts] = useState([]);
   console.log("myWorkouts", myWorkouts)
-  const [mySelectedWorkouts, setMySelectedWorkouts] = useState([])
+  const [mySelectedWorkouts, setMySelectedWorkouts] = useState([]);
+  console.log("mySelectedWorkouts",mySelectedWorkouts)
   // const [dataToShow, setDataToShow] = useState([]);
   const [selectedWorkout, setSelectedWorkout] = useState("");
   console.log("selectedWorkout", selectedWorkout)
@@ -122,12 +123,14 @@ const TodaysWorkout = () => {
 
   const optionSelectHandler = (selectedOption: string) => {
     setSelectedWorkout(selectedOption);
+    setEntries([]);
     console.log("myWorkouts", myWorkouts)
 
     // setSelectedExercise(workoutsArr[0].exercises[0].title)
   }
   const optionSelectHandler1 = (selectedExercise: string) => {
-    setSelectedExercise(selectedExercise)
+    setSelectedExercise(selectedExercise);
+    setEntries([]);
   }
 
   useEffect(() => {
@@ -137,9 +140,12 @@ const TodaysWorkout = () => {
       console.log("workoutsArr", workoutsArr)
       setMySelectedWorkouts(workoutsArr);
             // @ts-ignore
-      setSelectedWorkoutDocId(workoutsArr[0].id)
+      if(workoutsArr.length>0){
+              // @ts-ignore
+        setSelectedWorkoutDocId(workoutsArr[0].id)
+        }      
     }
-  }, [myWorkouts])
+  }, [myWorkouts,selectedWorkout])
 
   return (
     <div className='todays-workout-container'>
@@ -173,8 +179,8 @@ const TodaysWorkout = () => {
           <thead>
             <tr>
               <th>Set No</th>
-              <th>Reps</th>
               <th>Weight (in KG)</th>
+              <th>Reps</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -182,8 +188,8 @@ const TodaysWorkout = () => {
             {entries.map((entry) => (
               <tr key={entry.setNo}>
                 <td>{entry.setNo}</td>
-                <td>{entry.repCount}</td>
                 <td>{entry.weight}</td>
+                <td>{entry.repCount}</td>
                 <td></td>
               </tr>
             ))}

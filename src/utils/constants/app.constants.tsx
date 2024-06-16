@@ -71,3 +71,8 @@ export const PLEASE_SAVE_DATA_BEFORE_PROCEEDING = {
     subHeading:"Please save data before proceeding.",
     duration:1500
 }
+export const NO_RECORDS_FOUND = {
+    heading:"Oops",
+    subHeading:"No records found.",
+    duration:1500
+}

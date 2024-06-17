@@ -4,7 +4,7 @@ import './WeightRepTrackModalComponent.scss';
 import { IoIosClose } from "react-icons/io";
 
               // @ts-ignore
-const WeightRepTrackModalComponent = ({ showModal, handleClose, data,title,dataType}) => {
+const WeightRepTrackModalComponent = ({ showModal, handleClose, date,data,title,dataType}) => {
   console.log("data",data)
   return (
     <div className={`modal-container ${showModal ? 'display-block' : 'display-none'}`}>
@@ -14,7 +14,7 @@ const WeightRepTrackModalComponent = ({ showModal, handleClose, data,title,dataT
         </button>
        <p className='modal-header'>
         <span>Your last {title} workout</span>
-        <span>(on {"date"})</span>
+        <span>(on {date})</span>
          </p>
       {dataType==="exercise"?  <table>
           <thead>

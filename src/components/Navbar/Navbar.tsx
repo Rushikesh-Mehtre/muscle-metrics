@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { FaBars } from "react-icons/fa";
-import { ImCross } from "react-icons/im";
+import { IoIosClose } from "react-icons/io";
 
 const links = [
   {
@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
       <div className="mobile-navbar-container">
         <div className="mobile-navbar-brand">Muscle Metrics</div>
         <div onClick={toggleMenu}>
-          {isOpen ? <ImCross className='navbar-icon-1' /> : <FaBars className='navbar-icon-2' />}
+          {isOpen ? <IoIosClose className='icon'/> : <FaBars className='icon' />}
         </div>
       </div>
       {isOpen && (

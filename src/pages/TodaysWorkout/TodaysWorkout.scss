@@ -41,10 +41,6 @@
         cursor: pointer;
     }
 
-    button:hover {
-        background-color: #ddd;
-    }
-
     .table-action-btn-container {
         display: flex;
         justify-content: flex-end;
@@ -72,5 +68,20 @@
         align-items: center;
         gap: 10px;
         padding: 70px 0;
+    }
+
+    .last-performance-label {
+        span {
+            margin-right: 5px;
+        }
+
+        .link-icon {
+            position: relative;
+            top: 2px;
+            fill: #073366;
+        }
+
+        gap: 5px;
+        color: #073366
     }
 }

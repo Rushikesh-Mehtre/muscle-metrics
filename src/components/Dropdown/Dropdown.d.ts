@@ -15,4 +15,5 @@ export interface DropdownProps {
     optionSelectHandler : (selectedOption:string)=>void
     dataAddedToServer?:boolean
     singleEntryPresent?:boolean
+    value?:string
 }

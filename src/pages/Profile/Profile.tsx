@@ -11,9 +11,34 @@ import { db } from '../../firebaseConfig';
 import { collection, query, getDocs } from "firebase/firestore";
 import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
 import { myWorkoutObj } from "./Profile.d"
+import Dropdown from '../../components/Dropdown/Dropdown';
 
-// import { doc, deleteDoc } from "firebase/firestore";
-
+const workOutList = [
+  {
+    id: "1",
+    title: "back"
+  },
+  {
+    id: "2",
+    title: "biceps"
+  },
+  {
+    id: "3",
+    title: "chest"
+  },
+  {
+    id: "4",
+    title: "triceps"
+  },
+  {
+    id: "5",
+    title: "shoulders"
+  },
+  {
+    id: "6",
+    title: "legs"
+  },
+]
 const Profile = () => {
 
   // variables
@@ -22,28 +47,15 @@ const Profile = () => {
   const userName = useSelector((state: RootState) => state.login.userName);
   const userDocId = useSelector((state: RootState) => state.login.userDocId);
   const [myWorkoutData, setMyWorkoutData] = useState<myWorkoutObj[]>([]);
-  console.log("myWorkoutData", myWorkoutData)
-  console.log("myWorkoutData", myWorkoutData)
+  const [workoutListToShow, setWorkoutListToShow] = useState([]);
+  const [workoutSelected,setWorkoutSelected]=useState(false)
+
+
+
   // ui functions
   const goToWorkoutPlan = () => {
     navigate('/workout-plan')
   }
-
-  // const deleteWorkout = async (exerciseDocId: string) => {
-  //   dispatch(showLoader());
-  //   // find path of workOutToDelete first
-  //   // use this path to delete specific document 
-
-  //   const results = await deleteDoc(doc(db, `users/${userDocId}/workouts`, exerciseDocId));
-  //   getUserData();
-  //   console.log("results", results)
-
-  //   // to delete specific workout collection under workouts document under specific user document under user collection
-
-  // }
-
-
-
 
   const getUserData = async () => {
     const q = query(collection(db, `users/${userDocId}/workouts`));
@@ -58,74 +70,65 @@ const Profile = () => {
       myWorkOutData.push(workoutDataObj);
     });
     setMyWorkoutData(myWorkOutData);
-
-    // dispatch(login(userName:userName))
   }
+
+  const optionSelectHandler = (selectedWorkout: string) => {
+    const workoutListToShow = myWorkoutData.filter((item) => item.exerciseName === selectedWorkout)
+                    // @ts-ignore
+    setWorkoutListToShow(workoutListToShow);
+    setWorkoutSelected(true);
+  }
+
+  // use effect blocks
 
   useEffect(() => {
     dispatch(showLoader());
     getUserData();
   }, []);
-  // const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  // const handleItemSelection = (item: string) => {
-  //   const selectedItemArr = selectedItems;
-  //         // @ts-ignore
-  //   const finalSelectedArr = selectedItems.map((item) => item.title).includes(item.title) ? selectedItems.filter((item1) => item1.title !== item.title) : [...selectedItemArr, item]
-  //   setSelectedItems(finalSelectedArr);
 
-  // };
-  // const [exerciseIdToEdit, setExerciseIdToEdit] = useState("");
+ 
   return (
     <>
 
       <div className='profile-container'>
 
         <PageHeading headingLabel={`Welcome ${userName}`} />
-
-        {/* if no workout added to profile */}
-        {
-          myWorkoutData.length === 0 &&
-          <div className='no-my-workouts-container'>
-            <p className='no-workout-label'>Oops ! No workouts added to profile !</p>
-            <Button buttonTitle='Add workout plan' onClick={goToWorkoutPlan} />
-          </div>
+        {workOutList.length > 0 && <Dropdown
+          // @ts-ignore
+          labelHeading="My workout plan"
+          options={workOutList}
+          optionSelectHandler={optionSelectHandler}
+        />
         }
-        {myWorkoutData && myWorkoutData.length > 0 &&
-          myWorkoutData.map((workOutItem) => <div>
+        {workoutListToShow && workoutListToShow.length > 0 ?
+          workoutListToShow.map((workOutItem) => <div>
             <div className='select-exercise-container'>
               <div className='header'>
-                <span>{workOutItem.exerciseName}</span>
-                {/* <div className='btn-container'>
-                  {exerciseIdToEdit===workOutItem.exerciseDocId ? <button onClick={() => setExerciseIdToEdit("")}>Save</button> : <button onClick={() => setExerciseIdToEdit(workOutItem.exerciseDocId)}>Edit</button>}
-                  <button>Delete</button>
-                </div> */}
-
+                
+                <span>Exercises for {
+                                // @ts-ignore
+                workOutItem.exerciseName
+                }</span>
               </div>
               <div className="item-list">
-                {workOutItem.exercises.map((item) => (
-                  <div key={item.title} 
-                        // @ts-ignore
-                  className={`item`} 
-                  // onClick={() => handleItemSelection(item)}
+                {
+                                // @ts-ignore
+                workOutItem.exercises.map((item) => (
+                  <div key={item.title}
+                    className={`item`}
                   >
-                  {/* { exerciseIdToEdit===workOutItem.exerciseDocId &&  */}
-                  {/* <input
-                      type="checkbox"
-                            // @ts-ignore
-                      checked={selectedItems.map((item) => item.title).includes(item.title)}
-                            // @ts-ignore
-                      onChange={() => handleItemSelection(item)}
-                      className="checkbox"
-                    /> */}
-                    {/* } */}
                     {item.title}
                   </div>
                 ))}
               </div>
             </div>
+            <p className='label-to-edit'>Want to add / remove exercises ? Go to <span className='workout-plan-link' onClick={goToWorkoutPlan}>Workout plans</span></p>
           </div>
           )
-
+          : (workoutSelected && <div className='no-my-workouts-container'>
+            <p className='no-workout-label'>Oops ! No workouts added to profile !</p>
+            <Button buttonTitle='Add workout plan' onClick={goToWorkoutPlan} />
+          </div>)
 
         }
 

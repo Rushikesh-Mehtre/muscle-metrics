@@ -22,7 +22,8 @@ const WorkoutPlan = () => {
   const userDocId = useSelector((state: RootState) => state.login.userDocId);
   const [selectedOption, setSelectionOption] = useState("");
   const [selectedWorkoutDocId, setSelectedWorkoutDocId] = useState("");
-  console.log("selectedWorkoutDocId", selectedWorkoutDocId)
+  console.log("selectedWorkoutDocId", selectedWorkoutDocId);
+  const [apiCallMade,setApiCallMade]=useState(false);
 
   // ui functions
 
@@ -102,6 +103,7 @@ const WorkoutPlan = () => {
   // console.log("addedItems", addedItems)
 
   const handleItemSelection = (item: string) => {
+    setApiCallMade(false);
     const selectedItemArr = selectedItems;
           // @ts-ignore
     const finalSelectedArr = selectedItems.map((item) => item.title).includes(item.title) ? selectedItems.filter((item1) => item1.title !== item.title) : [...selectedItemArr, item]
@@ -110,6 +112,7 @@ const WorkoutPlan = () => {
   };
 
   const handleAddItems = async () => {
+    setApiCallMade(true);
     dispatch(showLoader());
     if (selectedWorkoutDocId) {
 
@@ -132,7 +135,7 @@ const WorkoutPlan = () => {
 
   return (
     <div className='workout-plan-container'>
-      <PageHeading headingLabel="Lets make workout plan" />
+      <PageHeading headingLabel="Lets create/edit your workout plan" />
       <div className='select-workout-container'>
         <label htmlFor="workout">Select Workout</label>
         <select id="workout" onChange={optionSelectHandler} className="dropdown">
@@ -175,7 +178,7 @@ const WorkoutPlan = () => {
         <button
           onClick={handleAddItems}
           className="add-button"
-          disabled={selectedItems.length === 0}
+          disabled={selectedItems.length === 0 || apiCallMade}
         >
           Add / Update
         </button>

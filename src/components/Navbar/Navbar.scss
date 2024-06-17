@@ -5,62 +5,52 @@
     background-color: var(--primary-color);
     color: white;
     padding: 15px 20px;
-    // position: fixed;
-    // top: 0;
-    // left: 0;
-    // z-index: 1000;
-}
-
-.mobile-navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--primary-color);
-}
-
-.mobile-navbar-brand {
-    font-size: 17px;
-    background-color: var(--primary-color);
-    color: white;
-    font-weight: bold;
 
 
-}
+    .mobile-navbar-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--primary-color);
+    }
 
-.navbar-icon-1 {
-    height: 25px;
-    width: 25px;
-    fill: white;
-    position: relative;
-    top: 2px;
-    right: 2px;
-}
+    .mobile-navbar-brand {
+        font-size: 17px;
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: bold;
 
-.navbar-icon-2 {
-    height: 27px;
-    width: 27px;
-    fill: white;
-}
 
-.mobile-navbar-menu {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--primary-color);
-    position: absolute;
-    top: 58px;
-    left: 0;
-    width: 100%;
-    border-top: 1px solid white;
-}
+    }
 
-.mobile-navbar-item {
-    padding: 10px 20px;
-    color: white;
-    text-decoration: none;
-    border-bottom: 1px solid #305275;
-    background-color: var(--primary-color);
-}
+    .icon {
+        height: 30px;
+        width: 30px;
+        fill: white;
+    }
 
-.mobile-navbar-item:hover {
-    background-color: #001630;
+
+    .mobile-navbar-menu {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--primary-color);
+        position: absolute;
+        top: 58px;
+        left: 0;
+        width: 100%;
+        border-top: 1px solid white;
+        z-index: 999;
+    }
+
+    .mobile-navbar-item {
+        padding: 10px 20px;
+        color: white;
+        text-decoration: none;
+        border-bottom: 1px solid #305275;
+        background-color: var(--primary-color);
+    }
+
+    .mobile-navbar-item:hover {
+        background-color: #001630;
+    }
 }

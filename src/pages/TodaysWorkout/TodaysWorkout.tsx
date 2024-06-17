@@ -14,6 +14,10 @@ import RepCountWeightInput from '../../components/RepCountWeightInput/RepCountWe
 import { showAlert } from '../../store/features/alert/alertSlice';
 import { EXERCISE_DATA_ADDED_SUCCESSFULLY, NO_RECORDS_FOUND, REMOVE_OR_ADD_OPEN_FIELD_MSG } from '../../utils/constants/app.constants';
 import WeightRepTrackModalComponent from '../../components/WeightRepTrackModalComponent/WeightRepTrackModalComponent';
+import { FaExternalLinkAlt } from "react-icons/fa";
+import Button from '../../components/Button/Button';
+import { addToTodaysWorkout } from '../../store/features/todays-workout/TodaysWorkoutSlice';
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
@@ -57,7 +61,11 @@ const TodaysWorkout = () => {
   const [selectedWorkoutDocId, setSelectedWorkoutDocId] = useState("");
   console.log("selectedWorkoutDocId", selectedWorkoutDocId)
   const userDocId = useSelector((state: RootState) => state.login.userDocId);
+  const todaysWorkoutData = useSelector((state: RootState) => state.todaysWorkout.todaysWorkoutData);
+  console.log("todaysWorkoutData",todaysWorkoutData)
   const dispatch = useDispatch();
+  const [workoutSelected, setWorkoutSelected] = useState(false)
+
   const getMyWorkoutData = async () => {
     const q = query(collection(db, `users/${userDocId}/workouts`));
     // get user data
@@ -97,6 +105,11 @@ const TodaysWorkout = () => {
     setDataAddedToServer(false);
     const newEntry = { setNo, repCount, weight };
     setEntries([...entries, newEntry]);
+    dispatch(addToTodaysWorkout({
+      workoutName:selectedWorkout,
+      exerciseName:selectedExercise,
+      exerciseCountArr : [...entries,newEntry]
+    }))
     // Here you can call your API
   };
 
@@ -119,18 +132,18 @@ const TodaysWorkout = () => {
         exerciseName: selectedExercise,
         exercisesTrackingArr: entries,
         createdAt: new Date().toISOString(),
-        addedAt:dateMDY
+        addedAt: dateMDY
       }
     );
     const result1 = await addDoc(collection(firestore, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedWorkout}`),
-    {
-      exerciseName: selectedExercise,
-      exercisesTrackingArr: entries,
-      createdAt: new Date().toISOString(),
-      addedAt:dateMDY
+      {
+        exerciseName: selectedExercise,
+        exercisesTrackingArr: entries,
+        createdAt: new Date().toISOString(),
+        addedAt: dateMDY
 
-    }
-  );
+      }
+    );
     console.log("result", result);
     console.log("result1", result1);
     setDataAddedToServer(true);
@@ -139,8 +152,9 @@ const TodaysWorkout = () => {
   }
 
   const optionSelectHandler = (selectedOption: string) => {
-
+    setWorkoutSelected(true)
     setSelectedWorkout(selectedOption);
+    setSelectedExercise("")
     setEntries([]);
     setShowCurrentEntryFields(true);
 
@@ -162,6 +176,8 @@ const TodaysWorkout = () => {
       if (workoutsArr.length > 0) {
         // @ts-ignore
         setSelectedWorkoutDocId(workoutsArr[0].id)
+                        // @ts-ignore
+        setSelectedExercise(workoutsArr[0].exercises[0].title)
       }
     }
   }, [myWorkouts, selectedWorkout]);
@@ -177,87 +193,93 @@ const TodaysWorkout = () => {
   };
   const [dataForModal, setDataForModal] = useState([]);
   const [dataType, setDataType] = useState("");
+
+  // this function will decide what data to show on modal
   const modalDataHandler = async (dataType: string) => {
     setDataType(dataType)
     dispatch(showLoader());
-    if(dataType==="exercise"){
+    if (dataType === "exercise") {
       const q = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedExercise}`)
-      , orderBy('createdAt', 'desc'), limit(1));
+        , orderBy('createdAt', 'desc'), limit(1));
       const querySnapshot1 = await getDocs(q);
-      console.log("querySnapshot1",querySnapshot1.empty)
+      console.log("querySnapshot1", querySnapshot1.empty)
       // get user data
       // @ts-ignore
-      if(!querySnapshot1.empty){
-       // record present 
-                 // @ts-ignore
-       let lastAddedWorkout = [];
-       querySnapshot1.forEach((doc) => {
-         // doc.data() is never undefined for query doc snapshots
-         // @ts-ignore
-         const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(),title:selectedExercise };
-         lastAddedWorkout.push(workoutDataObj);
+      if (!querySnapshot1.empty) {
+        // record present 
+        // @ts-ignore
+        let lastAddedWorkout = [];
+        querySnapshot1.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
           // @ts-ignore
-          console.log("lastAddedWorkout",lastAddedWorkout)
-                    // @ts-ignore
-         setDataForModal(lastAddedWorkout)
-         handleOpenModal();
-       });
-      }else{
+          const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(), title: selectedExercise };
+          lastAddedWorkout.push(workoutDataObj);
+          // @ts-ignore
+          console.log("lastAddedWorkout", lastAddedWorkout)
+          // @ts-ignore
+          setDataForModal(lastAddedWorkout)
+          handleOpenModal();
+        });
+      } else {
         // no record present
         dispatch(showAlert(NO_RECORDS_FOUND))
       }
-    }else if(dataType==="workout"){
+    } else if (dataType === "workout") {
       let lastWorkOutAddedAt = "";
       const q = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedWorkout}`), orderBy('createdAt', 'desc'), limit(1));
       const querySnapshot1 = await getDocs(q);
-      console.log("querySnapshot1",querySnapshot1.empty)
+      console.log("querySnapshot1", querySnapshot1.empty)
       // get user data
       // @ts-ignore
-      if(!querySnapshot1.empty){
-       // record present 
-                 // @ts-ignore
-      
-       let lastAddedWorkout = [];
-       querySnapshot1.forEach((doc) => {
-         // doc.data() is never undefined for query doc snapshots
-         // @ts-ignore
-         const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(),title:selectedWorkout  };
-                  // @ts-ignore
-         lastWorkOutAddedAt = workoutDataObj.addedAt;
-         console.log("lastWorkOutAddedAt",lastWorkOutAddedAt)
-          });
-          const q2 = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedWorkout}`), where("addedAt","==",lastWorkOutAddedAt));
-          const querySnapshot2 = await getDocs(q2);
-                    // @ts-ignore
-                    querySnapshot2.forEach((doc) => {
-                      // doc.data() is never undefined for query doc snapshots
-                      // @ts-ignore
-                      const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(),title:selectedWorkout  };
-                      lastAddedWorkout.push(workoutDataObj);
-                               // @ts-ignore
-                       });
-                                             // @ts-ignore
-          console.log("lastAddedWorkout",lastAddedWorkout)
-                                                       // @ts-ignore
-          setDataForModal(lastAddedWorkout)
-          handleOpenModal();
-      }else{
+      if (!querySnapshot1.empty) {
+        // record present 
+        // @ts-ignore
+
+        let lastAddedWorkout = [];
+        querySnapshot1.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          // @ts-ignore
+          const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(), title: selectedWorkout };
+          // @ts-ignore
+          lastWorkOutAddedAt = workoutDataObj.addedAt;
+          console.log("lastWorkOutAddedAt", lastWorkOutAddedAt)
+        });
+        const q2 = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedWorkout}`), where("addedAt", "==", lastWorkOutAddedAt));
+        const querySnapshot2 = await getDocs(q2);
+        // @ts-ignore
+        querySnapshot2.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          // @ts-ignore
+          const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(), title: selectedWorkout };
+          lastAddedWorkout.push(workoutDataObj);
+          // @ts-ignore
+        });
+        // @ts-ignore
+        console.log("lastAddedWorkout", lastAddedWorkout)
+        // @ts-ignore
+        setDataForModal(lastAddedWorkout)
+        handleOpenModal();
+      } else {
         // no record present
         dispatch(showAlert(NO_RECORDS_FOUND))
       }
     }
     dispatch(hideLoader())
- 
+
   }
 
   return (
     <div className='todays-workout-container'>
       <div className='header'>
         <div className='heading-data'>
-          <p className='left'>Select Today's workout</p>
-          {selectedWorkout && mySelectedWorkouts.length > 0 && <button onClick={() => modalDataHandler("workout")}>Check your last {selectedWorkout} workout </button>}
+          <p className='left'>Select today's workout</p>
+          {selectedWorkout && mySelectedWorkouts.length > 0 &&
+            <p className='last-performance-label' onClick={() => modalDataHandler("workout")}>
+              <span>last performance</span>
+              <FaExternalLinkAlt className='link-icon' />
+            </p>
+          }
         </div>
-        <p> </p>
         {workOutList.length > 0 && <Dropdown
           // @ts-ignore
           options={workOutList}
@@ -266,6 +288,9 @@ const TodaysWorkout = () => {
           dataAddedToServer={dataAddedToServer}
           // @ts-ignore
           singleEntryPresent={entries.length > 0}
+                          // @ts-ignore
+          value={dataType==="exercise"?selectedExercise:selectedWorkout}
+
         />
         }
 
@@ -274,7 +299,10 @@ const TodaysWorkout = () => {
             <>
               <div className='heading-data'>
                 <p className='left'>Select exercise </p>
-                {selectedExercise && <button onClick={() => modalDataHandler("exercise")}>Check your last {selectedExercise} workout </button>}
+                {selectedExercise && <p className='last-performance-label' onClick={() => modalDataHandler("exercise")}>
+                  <span>last performance</span>
+                  <FaExternalLinkAlt className='link-icon' />
+                </p>}
               </div>
 
               <Dropdown
@@ -285,14 +313,17 @@ const TodaysWorkout = () => {
                 dataAddedToServer={dataAddedToServer}
                 // @ts-ignore
                 singleEntryPresent={entries.length > 0}
+                                // @ts-ignore
+                value={dataType==="exercise"?selectedExercise:selectedWorkout}
               />
 
             </>
             :
-            <div className='no-exercises-container'>
+            (workoutSelected && <div className='no-exercises-container'>
               <p>Oops ! No exercise present for this workout</p>
-              <button onClick={addExerciseHandler}>Add exercise</button>
-            </div>
+
+            <Button size="medium" onClick={() => addExerciseHandler()} buttonTitle='Add Exercise' />
+            </div>)
         }
       </div>
       {selectedWorkout && mySelectedWorkouts && selectedExercise && mySelectedWorkouts.length > 0 && <div>
@@ -326,25 +357,30 @@ const TodaysWorkout = () => {
         </table>
         <div className='table-action-btn-container'>
           {
-            !showCurrentEntryFields && <button onClick={() => setShowCurrentEntryFields(true)}>Add new Entry</button>
+            !showCurrentEntryFields &&
+
+            <Button size="medium" onClick={() => setShowCurrentEntryFields(true)} buttonTitle='Add new Entry' />
 
           }
-          <button onClick={() => addExerciseDataToServer()}>Done</button>
+          <Button size="medium" onClick={() => addExerciseDataToServer()} buttonTitle='Save' />
         </div>
       </div>
 
       }
 
-    { showModal &&  <WeightRepTrackModalComponent
+      {showModal && <WeightRepTrackModalComponent
         showModal={showModal}
         handleClose={handleCloseModal}
         // @ts-ignore
         data={dataForModal}
         // @ts-ignore
-        title={dataForModal.title}
+        title={dataType === "exercise" ? selectedExercise : selectedWorkout}
         dataType={dataType}
-        // @ts-ignore
-        // date={dataForModal.createdAt?.slice(0, 10)}
+                        // @ts-ignore
+        date={dataForModal[0].addedAt}
+
+      // @ts-ignore
+      // date={dataForModal.createdAt?.slice(0, 10)}
       />}
 
     </div>

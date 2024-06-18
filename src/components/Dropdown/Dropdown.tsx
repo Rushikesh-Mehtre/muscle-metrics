@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import React, {  useEffect, useState } from 'react';
+import React from 'react';
 import "./Dropdown.scss"
 import {DropdownProps} from "./Dropdown.d"
 import { useDispatch } from 'react-redux';
@@ -14,16 +14,16 @@ const Dropdown = (props:DropdownProps) => {
       dispatch(showAlert(PLEASE_SAVE_DATA_BEFORE_PROCEEDING));
       return;
     }else{
-      setSelectedValue(event.target.value)
+      // setSelectedValue(event.target.value)
       optionSelectHandler(event.target.value);
       }
   };
-  const [selectedValue,setSelectedValue]=useState("");
-  useEffect(()=>{
-    if(value){
-      setSelectedValue(value)
-      }
-  },[value])
+  // const [selectedValue,setSelectedValue]=useState("");
+  // useEffect(()=>{
+  //   if(value){
+  //     setSelectedValue(value)
+  //     }
+  // },[value])
   return (
     <div className="dropdown-container">
       <label htmlFor="dropdown" >
@@ -33,7 +33,7 @@ const Dropdown = (props:DropdownProps) => {
         id="dropdown"
         name="dropdown"
         onChange={handleChange}
-        value={selectedValue}
+        value={value}
         
       >
         <option value="" disabled>--Select--</option>

@@ -7,3 +7,8 @@ export interface myWorkoutObj {
     exerciseName:string,
     exercises : exerciseObj[]
 }
+export interface Entry {
+    setNo: number;
+    repCount: number;
+    weight: number;
+  }

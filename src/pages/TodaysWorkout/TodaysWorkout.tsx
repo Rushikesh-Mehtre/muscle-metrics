@@ -1,71 +1,82 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from 'react'
-import Dropdown from '../../components/Dropdown/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
 import { useNavigate } from 'react-router-dom';
+
+// components
+import Dropdown from '../../components/Dropdown/Dropdown';
+import RepCountWeightInput from '../../components/RepCountWeightInput/RepCountWeightInput';
+import Modal from '../../components/Modal/Modal';
+import Button from '../../components/Button/Button';
+import WeightRepTrackModalComponent from '../../components/WeightRepTrackModalComponent/WeightRepTrackModalComponent';
+
+// css
 import "./TodaysWorkout.scss"
+
+// redux store
+import { RootState } from '../../store/store';
 import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
+import { showAlert } from '../../store/features/alert/alertSlice';
+import { addToTodaysWorkout } from '../../store/features/todays-workout/TodaysWorkoutSlice';
+
+
+// types
+import { Entry, myWorkoutObj } from "./TodaysWorkout.d"
+
+// firebase
 import { addDoc, collection, getDocs, getFirestore, limit, orderBy, query, where } from 'firebase/firestore';
 import { app, db } from '../../firebaseConfig';
-import { myWorkoutObj } from "./TodaysWorkout.d"
-import RepCountWeightInput from '../../components/RepCountWeightInput/RepCountWeightInput';
-import { showAlert } from '../../store/features/alert/alertSlice';
-import { EXERCISE_DATA_ADDED_SUCCESSFULLY, NO_RECORDS_FOUND, REMOVE_OR_ADD_OPEN_FIELD_MSG } from '../../utils/constants/app.constants';
-import WeightRepTrackModalComponent from '../../components/WeightRepTrackModalComponent/WeightRepTrackModalComponent';
+
+// constants
+import { EXERCISE_DATA_ADDED_SUCCESSFULLY, NO_RECORDS_FOUND, REMOVE_OR_ADD_OPEN_FIELD_MSG, workOutList } from '../../utils/constants/app.constants';
+
+// icons
 import { FaExternalLinkAlt } from "react-icons/fa";
-import Button from '../../components/Button/Button';
-import { addToTodaysWorkout } from '../../store/features/todays-workout/TodaysWorkoutSlice';
-import Modal from '../../components/Modal/Modal';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
-const workOutList = [
-  {
-    id: "1",
-    title: "back"
-  },
-  {
-    id: "2",
-    title: "biceps"
-  },
-  {
-    id: "3",
-    title: "chest"
-  },
-  {
-    id: "4",
-    title: "triceps"
-  },
-  {
-    id: "5",
-    title: "shoulders"
-  },
-  {
-    id: "6",
-    title: "legs"
-  },
-]
 
 const TodaysWorkout = () => {
-  const [myWorkouts, setMyWorkouts] = useState([]);
-  console.log("myWorkouts", myWorkouts)
-  const [mySelectedWorkouts, setMySelectedWorkouts] = useState([]);
-  console.log("mySelectedWorkouts", mySelectedWorkouts)
-  // const [dataToShow, setDataToShow] = useState([]);
-  const [selectedWorkout, setSelectedWorkout] = useState("");
-  console.log("selectedWorkout", selectedWorkout)
-  const [selectedExercise, setSelectedExercise] = useState("");
-  console.log("selectedExercise", selectedExercise);
-  const [selectedWorkoutDocId, setSelectedWorkoutDocId] = useState("");
-  console.log("selectedWorkoutDocId", selectedWorkoutDocId)
+
+  // state variables
+  const firestore = getFirestore(app);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userDocId = useSelector((state: RootState) => state.login.userDocId);
   const todaysWorkoutData = useSelector((state: RootState) => state.todaysWorkout.todaysWorkoutData);
-  console.log("todaysWorkoutData",todaysWorkoutData)
-  const dispatch = useDispatch();
-  const [workoutSelected, setWorkoutSelected] = useState(false)
+  console.log("todaysWorkoutData", todaysWorkoutData)
+
+  // this will be workouts and exercises user selected and saved on server
+  const [myWorkouts, setMyWorkouts] = useState([]);
+
+  // after selecting one of the available workouts - workout data to show will be stored in mySelectedWorkouts
+  const [mySelectedWorkouts, setMySelectedWorkouts] = useState([]);
+
+  // currently selected workout and currently selected exercise will be stored in  selectedWorkout amd selectedExercise
+  const [selectedWorkout, setSelectedWorkout] = useState("");
+  const [selectedExercise, setSelectedExercise] = useState("");
+
+  // selectedWorkoutDocId - this will be document id on firebase for the selected workout
+  const [selectedWorkoutDocId, setSelectedWorkoutDocId] = useState("");
+
+  // after selecting workout isWorkoutSelected is set to true
+  const [isWorkoutSelected, setIsWorkoutSelected] = useState(false);
+  const [todaysWorkout, setTodaysWorkout] = useState([]);
+
+  // entries will contain array of objects ; each object will have setno,repcount,weight.
+
+  const [entries, setEntries] = useState<Entry[]>([]);
+
+  // showCurrentEntryFields - this will be used to show input field for new set addition
+  const [showCurrentEntryFields, setShowCurrentEntryFields] = useState(true);
+  const [showModal1, setShowModal1] = useState(false);
+  const [dataForModal, setDataForModal] = useState([]);
+  const [dataType, setDataType] = useState("");
+  const [dataAddedToServer, setDataAddedToServer] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectionOption1, setSelectedOption1] = useState("");
+
+
+  // ui functions
 
   const getMyWorkoutData = async () => {
     const q = query(collection(db, `users/${userDocId}/workouts`));
@@ -74,42 +85,51 @@ const TodaysWorkout = () => {
     dispatch(hideLoader());
     let myWorkOutData: myWorkoutObj[] = [];
     querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
       const workoutDataObj = { id: doc.id, ...doc.data() };
       // @ts-ignore
       myWorkOutData.push(workoutDataObj);
     });
-    // @ts-ignore
-    console.log(myWorkOutData)
+
     // @ts-ignore
     setMyWorkouts(myWorkOutData);
 
     // dispatch(login(userName:userName))
   }
-  useEffect(() => {
+  const checkForTodaysWorkout = async () => {
     dispatch(showLoader());
-    getMyWorkoutData()
-  }, [])
-  const navigate = useNavigate();
+    const date = new Date();
+    let dateMDY = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+
+    // check if today's workout is added 
+    const q2 = query(collection(db, `users/${userDocId}/todays-workouts`), where("addedAt", "==", dateMDY));
+    const querySnapshot2 = await getDocs(q2);
+    // @ts-ignore
+    const todaysWorkout = [];
+    querySnapshot2.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      // @ts-ignore
+      const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data() };
+      todaysWorkout.push(workoutDataObj);
+    });
+    // @ts-ignore
+    setTodaysWorkout(todaysWorkout);
+    if (todaysWorkout.length > 1) {
+      // @ts-ignore
+      setSelectedWorkout(todaysWorkout[0].todaysWorkout)
+    }
+  }
   const addExerciseHandler = () => {
     navigate("/workout-plan")
   }
-  interface Entry {
-    setNo: number;
-    repCount: number;
-    weight: number;
-  }
-  const [entries, setEntries] = useState<Entry[]>([]);
-  console.log("entries", entries)
-  const [showCurrentEntryFields, setShowCurrentEntryFields] = useState(true);
+
   const handleAddEntry = (setNo: number, repCount: number, weight: number) => {
     setDataAddedToServer(false);
     const newEntry = { setNo, repCount, weight };
     setEntries([...entries, newEntry]);
     dispatch(addToTodaysWorkout({
-      workoutName:selectedWorkout,
-      exerciseName:selectedExercise,
-      exerciseCountArr : [...entries,newEntry]
+      workoutName: selectedWorkout,
+      exerciseName: selectedExercise,
+      exerciseCountArr: [...entries, newEntry]
     }))
     // Here you can call your API
   };
@@ -118,7 +138,6 @@ const TodaysWorkout = () => {
     setShowCurrentEntryFields(false);
     // setEntries(entries.slice(0, -1));
   };
-  const firestore = getFirestore(app);
   const addExerciseDataToServer = async () => {
     if (showCurrentEntryFields) {
       dispatch(showAlert(REMOVE_OR_ADD_OPEN_FIELD_MSG))
@@ -136,6 +155,7 @@ const TodaysWorkout = () => {
         addedAt: dateMDY
       }
     );
+    console.log("result", result);
     const result1 = await addDoc(collection(firestore, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedWorkout}`),
       {
         exerciseName: selectedExercise,
@@ -145,20 +165,19 @@ const TodaysWorkout = () => {
 
       }
     );
-    console.log("result", result);
-    console.log("result1", result1);
+    console.log("result1", result1)
+
     setDataAddedToServer(true);
     dispatch(hideLoader())
     dispatch(showAlert(EXERCISE_DATA_ADDED_SUCCESSFULLY))
   }
-
-  const [selectionOption1,setSelectedOption1]=useState("");
-
   const optionSelectHandler = async (selectedOption: string) => {
+    setDataType("workout");
+
     dispatch(showLoader());
     const date = new Date();
     let dateMDY = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-   
+
     // check if today's workout is added 
     const q2 = query(collection(db, `users/${userDocId}/todays-workouts`), where("addedAt", "==", dateMDY));
     const querySnapshot2 = await getDocs(q2);
@@ -169,58 +188,36 @@ const TodaysWorkout = () => {
       // @ts-ignore
       const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data() };
       todaysWorkout.push(workoutDataObj);
-      });
-      if(querySnapshot2.empty){
-        setSelectedOption1(selectedOption)
-        setShowModal1(true);
-        dispatch(hideLoader())
-      }else{
-        dispatch(hideLoader())
-        dispatch(showAlert({
-          heading:"Cannot change workout in between",
-                // @ts-ignore
-          subHeading:`Please continue with todays ${todaysWorkout[0].todaysWorkout} workout`,
-          duration:1500
-        }))
-      }
-      // 
+    });
+    if (querySnapshot2.empty) {
+      setSelectedOption1(selectedOption)
+      setShowModal1(true);
+      dispatch(hideLoader())
+    } else {
+      dispatch(hideLoader())
+      dispatch(showAlert({
+        heading: "Cannot change workout in between",
+        // @ts-ignore
+        subHeading: `Please continue with todays ${todaysWorkout[0].todaysWorkout} workout`,
+        duration: 1500
+      }))
+    }
+    // 
 
   }
   const optionSelectHandler1 = (selectedExercise: string) => {
+    setDataType("exercise");
     setSelectedExercise(selectedExercise);
     setEntries([]);
     setShowCurrentEntryFields(true);
 
   }
-
-  useEffect(() => {
-    if (selectedWorkout) {
-      // @ts-ignore
-      const workoutsArr = myWorkouts.filter((item) => item.exerciseName === selectedWorkout);
-      console.log("workoutsArr", workoutsArr)
-      setMySelectedWorkouts(workoutsArr);
-      // @ts-ignore
-      if (workoutsArr.length > 0) {
-        // @ts-ignore
-        setSelectedWorkoutDocId(workoutsArr[0].id)
-                        // @ts-ignore
-        setSelectedExercise(workoutsArr[0].exercises[0].title)
-      }
-    }
-  }, [myWorkouts, selectedWorkout]);
-
-  const [dataAddedToServer, setDataAddedToServer] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const handleOpenModal = () => {
     setShowModal(true);
   };
-
   const handleCloseModal = () => {
     setShowModal(false);
   };
-  const [dataForModal, setDataForModal] = useState([]);
-  const [dataType, setDataType] = useState("");
-
   // this function will decide what data to show on modal
   const modalDataHandler = async (dataType: string) => {
     setDataType(dataType)
@@ -229,7 +226,6 @@ const TodaysWorkout = () => {
       const q = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedExercise}`)
         , orderBy('createdAt', 'desc'), limit(1));
       const querySnapshot1 = await getDocs(q);
-      console.log("querySnapshot1", querySnapshot1.empty)
       // get user data
       // @ts-ignore
       if (!querySnapshot1.empty) {
@@ -242,7 +238,6 @@ const TodaysWorkout = () => {
           const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(), title: selectedExercise };
           lastAddedWorkout.push(workoutDataObj);
           // @ts-ignore
-          console.log("lastAddedWorkout", lastAddedWorkout)
           // @ts-ignore
           setDataForModal(lastAddedWorkout)
           handleOpenModal();
@@ -255,7 +250,6 @@ const TodaysWorkout = () => {
       let lastWorkOutAddedAt = "";
       const q = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedWorkout}`), orderBy('createdAt', 'desc'), limit(1));
       const querySnapshot1 = await getDocs(q);
-      console.log("querySnapshot1", querySnapshot1.empty)
       // get user data
       // @ts-ignore
       if (!querySnapshot1.empty) {
@@ -269,7 +263,6 @@ const TodaysWorkout = () => {
           const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(), title: selectedWorkout };
           // @ts-ignore
           lastWorkOutAddedAt = workoutDataObj.addedAt;
-          console.log("lastWorkOutAddedAt", lastWorkOutAddedAt)
         });
         const q2 = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedWorkout}`), where("addedAt", "==", lastWorkOutAddedAt));
         const querySnapshot2 = await getDocs(q2);
@@ -282,7 +275,6 @@ const TodaysWorkout = () => {
           // @ts-ignore
         });
         // @ts-ignore
-        console.log("lastAddedWorkout", lastAddedWorkout)
         // @ts-ignore
         setDataForModal(lastAddedWorkout)
         handleOpenModal();
@@ -294,39 +286,56 @@ const TodaysWorkout = () => {
     dispatch(hideLoader())
 
   }
-
-  const [showModal1, setShowModal1] = useState(false);
-
   const handleCloseModal1 = () => {
     setShowModal1(false);
   };
-
-  const handleContinue =  async () => {
+  const handleContinue = async () => {
     dispatch(showLoader());
     const date = new Date();
     let dateMDY = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-  // // Handle continue action here
-    setWorkoutSelected(true)
+    // // Handle continue action here
+    setIsWorkoutSelected(true)
     setSelectedWorkout(selectionOption1);
     setSelectedExercise("")
     setEntries([]);
     setShowCurrentEntryFields(true);
     const result = await addDoc(collection(firestore, `users/${userDocId}/todays-workouts`),
       {
-        todaysWorkout : selectionOption1,
+        todaysWorkout: selectionOption1,
         addedAt: dateMDY
       }
     );
-    console.log("result",result)
-    setShowModal1(false);
     dispatch(hideLoader());
+    setShowModal1(false);
   };
+
+  // use effect blocks
+  useEffect(() => {
+    dispatch(showLoader());
+    getMyWorkoutData();
+    checkForTodaysWorkout();
+  }, []);
+
+  useEffect(() => {
+    if (selectedWorkout) {
+      // @ts-ignore
+      const workoutsArr = myWorkouts.filter((item) => item.exerciseName === selectedWorkout);
+      setMySelectedWorkouts(workoutsArr);
+      // @ts-ignore
+      if (workoutsArr.length > 0) {
+        // @ts-ignore
+        setSelectedWorkoutDocId(workoutsArr[0].id)
+        // @ts-ignore
+        setSelectedExercise(workoutsArr[0].exercises[0].title)
+      }
+    }
+  }, [myWorkouts, selectedWorkout]);
 
   return (
     <div className='todays-workout-container'>
       <div className='header'>
         <div className='heading-data'>
-          <p className='left'>Select today's workout</p>
+          {todaysWorkout && todaysWorkout.length > 0 ? <p>Your today's workout</p> : <p className='left'>Select today's workout</p>}
           {selectedWorkout && mySelectedWorkouts.length > 0 &&
             <p className='last-performance-label' onClick={() => modalDataHandler("workout")}>
               <span>last performance</span>
@@ -342,8 +351,8 @@ const TodaysWorkout = () => {
           dataAddedToServer={dataAddedToServer}
           // @ts-ignore
           singleEntryPresent={entries.length > 0}
-                          // @ts-ignore
-          value={dataType==="exercise"?selectedExercise:selectedWorkout}
+          // @ts-ignore
+          value={selectedWorkout}
 
         />
         }
@@ -367,16 +376,16 @@ const TodaysWorkout = () => {
                 dataAddedToServer={dataAddedToServer}
                 // @ts-ignore
                 singleEntryPresent={entries.length > 0}
-                                // @ts-ignore
-                value={dataType==="exercise"?selectedExercise:selectedWorkout}
+                // @ts-ignore
+                value={selectedExercise}
               />
 
             </>
             :
-            (workoutSelected && <div className='no-exercises-container'>
+            (isWorkoutSelected && <div className='no-exercises-container'>
               <p>Oops ! No exercise present for this workout</p>
 
-            <Button size="medium" onClick={() => addExerciseHandler()} buttonTitle='Add Exercise' />
+              <Button size="medium" onClick={() => addExerciseHandler()} buttonTitle='Add Exercise' />
             </div>)
         }
       </div>
@@ -430,16 +439,16 @@ const TodaysWorkout = () => {
         // @ts-ignore
         title={dataType === "exercise" ? selectedExercise : selectedWorkout}
         dataType={dataType}
-                        // @ts-ignore
+        // @ts-ignore
         date={dataForModal[0].addedAt}
 
       // @ts-ignore
       // date={dataForModal.createdAt?.slice(0, 10)}
       />}
-            <Modal 
-            show={showModal1} 
-            onClose={handleCloseModal1} 
-            onContinue={handleContinue} />
+      <Modal
+        show={showModal1}
+        onClose={handleCloseModal1}
+        onContinue={handleContinue} />
 
 
     </div>

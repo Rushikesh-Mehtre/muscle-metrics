@@ -76,3 +76,30 @@ export const NO_RECORDS_FOUND = {
     subHeading:"No records found.",
     duration:1500
 }
+
+export const workOutList = [
+    {
+      id: "1",
+      title: "back"
+    },
+    {
+      id: "2",
+      title: "biceps"
+    },
+    {
+      id: "3",
+      title: "chest"
+    },
+    {
+      id: "4",
+      title: "triceps"
+    },
+    {
+      id: "5",
+      title: "shoulders"
+    },
+    {
+      id: "6",
+      title: "legs"
+    },
+  ]

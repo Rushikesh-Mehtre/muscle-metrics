@@ -8,7 +8,6 @@ import { RootState } from './store/store';
 import Navbar from './components/Navbar/Navbar';
 import { hideAlert, showAlert } from './store/features/alert/alertSlice';
 import Alert from './components/Alert/Alert';
-import Footer from './components/Footer/Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import Loader from './components/Loader/Loader';
@@ -84,7 +83,6 @@ onAuthStateChanged(auth, (user)=>{
         {isAlertVisible && <Alert />}
         {isLoaderVisible && <Loader />}
         <Outlet />
-        {isLoggedIn && <Footer />}
       </div>
       <p className='not-supported-device'>
         <span>    <FontAwesomeIcon icon={faTriangleExclamation} className='warning-icon' /> </span>

@@ -14,21 +14,14 @@ const Dropdown = (props:DropdownProps) => {
       dispatch(showAlert(PLEASE_SAVE_DATA_BEFORE_PROCEEDING));
       return;
     }else{
-      // setSelectedValue(event.target.value)
       optionSelectHandler(event.target.value);
       }
   };
-  // const [selectedValue,setSelectedValue]=useState("");
-  // useEffect(()=>{
-  //   if(value){
-  //     setSelectedValue(value)
-  //     }
-  // },[value])
   return (
     <div className="dropdown-container">
-      <label htmlFor="dropdown" >
-        {labelHeading && labelHeading}
-      </label>
+    {labelHeading &&  <label htmlFor="dropdown" >
+        {labelHeading}
+      </label>}
       <select
         id="dropdown"
         name="dropdown"

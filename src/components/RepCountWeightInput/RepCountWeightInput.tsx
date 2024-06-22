@@ -26,7 +26,7 @@ const RepCountWeightInput: React.FC<RepCountWeightInputProps> = ({ setNo, onAdd,
           setRepCount(value);
         }
       };
-    const weightOptions = Array.from({ length: 50 }, (_, i) => (i + 1) * 2.5);
+    const weightOptions = Array.from({ length: 100 }, (_, i) => (i + 1) * 2.5);
 
     return (
         <tr className='rep-count-weight-input-container'>

@@ -12,8 +12,9 @@ export interface optionItem{
 export interface DropdownProps {
     labelHeading?:string,
     options:optionItem[],
-    optionSelectHandler : (selectedOption:string)=>void
-    dataAddedToServer?:boolean
-    singleEntryPresent?:boolean
-    value?:string
+    optionSelectHandler : (selectedOption:string)=>void,
+    dataAddedToServer?:boolean,
+    singleEntryPresent?:boolean,
+    value?:string,
+    dataAvailableForExercise?:boolean
 }

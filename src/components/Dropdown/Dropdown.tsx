@@ -8,9 +8,9 @@ import { showAlert } from '../../store/features/alert/alertSlice';
 import { PLEASE_SAVE_DATA_BEFORE_PROCEEDING } from '../../utils/constants/app.constants';
 const Dropdown = (props:DropdownProps) => {
   const dispatch = useDispatch();
-  const { labelHeading,options,optionSelectHandler,dataAddedToServer ,singleEntryPresent,value} = props
+  const { labelHeading,options,optionSelectHandler,dataAddedToServer ,singleEntryPresent,value,dataAvailableForExercise} = props
   const handleChange = (event:any) => {
-    if(!dataAddedToServer && singleEntryPresent){
+    if(!dataAddedToServer && singleEntryPresent && !dataAvailableForExercise){
       dispatch(showAlert(PLEASE_SAVE_DATA_BEFORE_PROCEEDING));
       return;
     }else{
@@ -27,7 +27,6 @@ const Dropdown = (props:DropdownProps) => {
         name="dropdown"
         onChange={handleChange}
         value={value}
-        
       >
         <option value="" disabled>--Select--</option>
         {options.map((option, index) => (

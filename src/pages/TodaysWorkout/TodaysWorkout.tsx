@@ -25,7 +25,7 @@ import { addToTodaysWorkout } from '../../store/features/todays-workout/TodaysWo
 import { Entry, myWorkoutObj } from "./TodaysWorkout.d"
 
 // firebase
-import { addDoc, collection, getDocs, getFirestore, limit, orderBy, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, getFirestore,query, where } from 'firebase/firestore';
 import { app, db } from '../../firebaseConfig';
 
 // constants
@@ -42,9 +42,6 @@ const TodaysWorkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userDocId = useSelector((state: RootState) => state.login.userDocId);
-  const todaysWorkoutData = useSelector((state: RootState) => state.todaysWorkout.todaysWorkoutData);
-  console.log("todaysWorkoutData", todaysWorkoutData)
-
   // this will be workouts and exercises user selected and saved on server
   const [myWorkouts, setMyWorkouts] = useState([]);
 
@@ -74,6 +71,8 @@ const TodaysWorkout = () => {
   const [dataAddedToServer, setDataAddedToServer] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectionOption1, setSelectedOption1] = useState("");
+  const [isDataAvailableForExercise,setIsDataAvailableForExercise]=useState(false);
+  const [toShowSaveBtn,setToShowSaveBtn]=useState(true);
 
 
   // ui functions
@@ -113,9 +112,10 @@ const TodaysWorkout = () => {
     });
     // @ts-ignore
     setTodaysWorkout(todaysWorkout);
-    if (todaysWorkout.length > 1) {
+    if (todaysWorkout.length > 0) {
       // @ts-ignore
-      setSelectedWorkout(todaysWorkout[0].todaysWorkout)
+      setSelectedWorkout(todaysWorkout[0].todaysWorkout);
+      
     }
   }
   const addExerciseHandler = () => {
@@ -123,6 +123,10 @@ const TodaysWorkout = () => {
   }
 
   const handleAddEntry = (setNo: number, repCount: number, weight: number) => {
+    setToShowSaveBtn(true)
+    if(setNo>2){
+      setShowCurrentEntryFields(false);
+    }
     setDataAddedToServer(false);
     const newEntry = { setNo, repCount, weight };
     setEntries([...entries, newEntry]);
@@ -166,7 +170,7 @@ const TodaysWorkout = () => {
       }
     );
     console.log("result1", result1)
-
+    setToShowSaveBtn(false)
     setDataAddedToServer(true);
     dispatch(hideLoader())
     dispatch(showAlert(EXERCISE_DATA_ADDED_SUCCESSFULLY))
@@ -206,6 +210,8 @@ const TodaysWorkout = () => {
 
   }
   const optionSelectHandler1 = (selectedExercise: string) => {
+    dispatch(showLoader());
+    setToShowSaveBtn(true);
     setDataType("exercise");
     setSelectedExercise(selectedExercise);
     setEntries([]);
@@ -220,11 +226,14 @@ const TodaysWorkout = () => {
   };
   // this function will decide what data to show on modal
   const modalDataHandler = async (dataType: string) => {
+    setToShowSaveBtn(true)
     setDataType(dataType)
+    const date = new Date();
+    let dateMDY = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
     dispatch(showLoader());
     if (dataType === "exercise") {
       const q = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedExercise}`)
-        , orderBy('createdAt', 'desc'), limit(1));
+        ,where('addedAt','!=',dateMDY));
       const querySnapshot1 = await getDocs(q);
       // get user data
       // @ts-ignore
@@ -238,6 +247,7 @@ const TodaysWorkout = () => {
           const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(), title: selectedExercise };
           lastAddedWorkout.push(workoutDataObj);
           // @ts-ignore
+          console.log("lastAddedWorkout",lastAddedWorkout)
           // @ts-ignore
           setDataForModal(lastAddedWorkout)
           handleOpenModal();
@@ -248,11 +258,11 @@ const TodaysWorkout = () => {
       }
     } else if (dataType === "workout") {
       let lastWorkOutAddedAt = "";
-      const q = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedWorkout}`), orderBy('createdAt', 'desc'), limit(1));
+      const q = query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedWorkout}`));
       const querySnapshot1 = await getDocs(q);
       // get user data
       // @ts-ignore
-      if (!querySnapshot1.empty) {
+      // if (!querySnapshot1.empty) {
         // record present 
         // @ts-ignore
 
@@ -272,16 +282,20 @@ const TodaysWorkout = () => {
           // @ts-ignore
           const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(), title: selectedWorkout };
           lastAddedWorkout.push(workoutDataObj);
+          });
+        // @ts-ignore
+        console.log("lastAddedWorkout",lastAddedWorkout)
+                // @ts-ignore
+        const previousExerciseData = lastAddedWorkout.filter((item)=>item.addedAt !== dateMDY);
+        // @ts-ignore
+        if(previousExerciseData.length>0){
           // @ts-ignore
-        });
-        // @ts-ignore
-        // @ts-ignore
-        setDataForModal(lastAddedWorkout)
-        handleOpenModal();
-      } else {
-        // no record present
-        dispatch(showAlert(NO_RECORDS_FOUND))
-      }
+          setDataForModal(previousExerciseData)
+          handleOpenModal();
+        }else{
+          dispatch(showAlert(NO_RECORDS_FOUND))
+        }
+      // } s
     }
     dispatch(hideLoader())
 
@@ -305,9 +319,40 @@ const TodaysWorkout = () => {
         addedAt: dateMDY
       }
     );
+    console.log("result",result)
     dispatch(hideLoader());
     setShowModal1(false);
   };
+
+  const checkForThisExerciseData = async ()=>{
+    const date = new Date();
+    let dateMDY = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+    const q= query(collection(db, `users/${userDocId}/workouts/${selectedWorkoutDocId}/${selectedExercise}`), where("addedAt", "==", dateMDY));
+  const querySnapshot1 = await getDocs(q);
+  // get user data
+  // @ts-ignore
+    // record present 
+    // @ts-ignore
+    let lastAddedWorkout = [];
+    querySnapshot1.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      // @ts-ignore
+      const workoutDataObj: myWorkoutObj = { recordId: doc.id, ...doc.data(), title: selectedExercise };
+      lastAddedWorkout.push(workoutDataObj);
+    });
+    if(lastAddedWorkout.length>0){
+      setIsDataAvailableForExercise(true);
+              // @ts-ignore
+      setEntries(lastAddedWorkout[0].exercisesTrackingArr)
+      setShowCurrentEntryFields(false);
+      setToShowSaveBtn(false)
+      }else{
+        setToShowSaveBtn(true)
+        setIsDataAvailableForExercise(false)
+      }
+      dispatch(hideLoader());
+  
+  }
 
   // use effect blocks
   useEffect(() => {
@@ -330,6 +375,14 @@ const TodaysWorkout = () => {
       }
     }
   }, [myWorkouts, selectedWorkout]);
+
+  useEffect(()=>{
+    // to check if selected workout data is present in redux or on server. if yes show that in table along with add entry and done button. 
+    if(selectedWorkoutDocId){
+
+      checkForThisExerciseData();
+      }
+  },[selectedExercise])
 
   return (
     <div className='todays-workout-container'>
@@ -376,6 +429,7 @@ const TodaysWorkout = () => {
                 dataAddedToServer={dataAddedToServer}
                 // @ts-ignore
                 singleEntryPresent={entries.length > 0}
+                dataAvailableForExercise={isDataAvailableForExercise}
                 // @ts-ignore
                 value={selectedExercise}
               />
@@ -400,7 +454,9 @@ const TodaysWorkout = () => {
             </tr>
           </thead>
           <tbody>
-            {entries.map((entry) => (
+
+            {
+            entries.map((entry) => (
               <tr key={entry.setNo}>
                 <td>{entry.setNo}</td>
                 <td>{entry.weight}</td>
@@ -425,7 +481,7 @@ const TodaysWorkout = () => {
             <Button size="medium" onClick={() => setShowCurrentEntryFields(true)} buttonTitle='Add new Entry' />
 
           }
-          <Button size="medium" onClick={() => addExerciseDataToServer()} buttonTitle='Save' />
+          {toShowSaveBtn && <Button size="medium" onClick={() => addExerciseDataToServer()} buttonTitle='Save' />}
         </div>
       </div>
 
@@ -441,9 +497,6 @@ const TodaysWorkout = () => {
         dataType={dataType}
         // @ts-ignore
         date={dataForModal[0].addedAt}
-
-      // @ts-ignore
-      // date={dataForModal.createdAt?.slice(0, 10)}
       />}
       <Modal
         show={showModal1}

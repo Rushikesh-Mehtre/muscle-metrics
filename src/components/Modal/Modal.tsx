@@ -1,31 +1,21 @@
-// Modal.tsx
+import { IoIosClose } from "react-icons/io";
 import React from 'react';
 import './Modal.scss';
 
 interface ModalProps {
-  show: boolean;
+  isOpen: boolean;
   onClose: () => void;
-  onContinue: () => void;
+  children: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ show, onClose, onContinue }) => {
-  if (!show) {
-    return null;
-  }
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <div className="modal-header">
-          <p>Do you want to continue?</p>
-        </div>
-        <div className="modal-body">
-          <p>After selecting today's workout it cannot be changed until next day</p>
-        </div>
-        <div className="modal-footer">
-          <button onClick={onClose} className="btn-cancel">Cancel</button>
-          <button onClick={onContinue} className="btn-continue">Continue</button>
-        </div>
+        <button className="modal-close" onClick={onClose}><IoIosClose className="close-icon" /></button>
+        {children}
       </div>
     </div>
   );

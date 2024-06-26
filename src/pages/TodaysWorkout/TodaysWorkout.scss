@@ -84,4 +84,11 @@
         gap: 5px;
         color: #073366
     }
+
+    .games-container {
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 }

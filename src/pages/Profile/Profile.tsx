@@ -1,44 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from 'react'
-import Button from '../../components/Button/Button'
-import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import "./Profile.scss"
 import { useNavigate } from 'react-router-dom';
+
+// components
+import Button from '../../components/Button/Button'
 import PageHeading from '../../components/PageHeading/PageHeading';
+import Dropdown from '../../components/Dropdown/Dropdown';
+import { workOutList } from '../../utils/constants/app.constants';
+
+// redux store
+import { RootState } from '../../store/store';
+import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
+
+//css
+import "./Profile.scss"
+
+//firebase
 import { db } from '../../firebaseConfig';
 import { collection, query, getDocs } from "firebase/firestore";
-import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
-import { myWorkoutObj } from "./Profile.d"
-import Dropdown from '../../components/Dropdown/Dropdown';
 
-const workOutList = [
-  {
-    id: "1",
-    title: "back"
-  },
-  {
-    id: "2",
-    title: "biceps"
-  },
-  {
-    id: "3",
-    title: "chest"
-  },
-  {
-    id: "4",
-    title: "triceps"
-  },
-  {
-    id: "5",
-    title: "shoulders"
-  },
-  {
-    id: "6",
-    title: "legs"
-  },
-]
+// types
+import { myWorkoutObj } from "./Profile.d"
+
+
 const Profile = () => {
 
   // variables
@@ -48,7 +34,8 @@ const Profile = () => {
   const userDocId = useSelector((state: RootState) => state.login.userDocId);
   const [myWorkoutData, setMyWorkoutData] = useState<myWorkoutObj[]>([]);
   const [workoutListToShow, setWorkoutListToShow] = useState([]);
-  const [workoutSelected,setWorkoutSelected]=useState(false)
+  const [isWorkoutSelected,setIsWorkoutSelected]=useState(false);
+  const [selectedWorkoutOption,setSelectedWorkoutOption]=useState("")
 
 
 
@@ -73,10 +60,8 @@ const Profile = () => {
   }
 
   const optionSelectHandler = (selectedWorkout: string) => {
-    const workoutListToShow = myWorkoutData.filter((item) => item.exerciseName === selectedWorkout)
-                    // @ts-ignore
-    setWorkoutListToShow(workoutListToShow);
-    setWorkoutSelected(true);
+    setSelectedWorkoutOption(selectedWorkout);
+    setIsWorkoutSelected(true);
   }
 
   // use effect blocks
@@ -86,12 +71,17 @@ const Profile = () => {
     getUserData();
   }, []);
 
+  useEffect(()=>{
+    const workoutListToShow = myWorkoutData.filter((item) => item.exerciseName === selectedWorkoutOption)
+    // @ts-ignore
+    setWorkoutListToShow(workoutListToShow);
+  },[selectedWorkoutOption,myWorkoutData])
+
  
   return (
     <>
 
       <div className='profile-container'>
-
         <PageHeading headingLabel={`Welcome ${userName}`} />
         {workOutList.length > 0 && <Dropdown
           // @ts-ignore
@@ -100,6 +90,7 @@ const Profile = () => {
           optionSelectHandler={optionSelectHandler}
         />
         }
+
         {workoutListToShow && workoutListToShow.length > 0 ?
           workoutListToShow.map((workOutItem) => <div>
             <div className='select-exercise-container'>
@@ -125,7 +116,7 @@ const Profile = () => {
             <p className='label-to-edit'>Want to add / remove exercises ? Go to <span className='workout-plan-link' onClick={goToWorkoutPlan}>Workout plans</span></p>
           </div>
           )
-          : (workoutSelected && <div className='no-my-workouts-container'>
+          : (isWorkoutSelected && <div className='no-my-workouts-container'>
             <p className='no-workout-label'>Oops ! No workouts added to profile !</p>
             <Button buttonTitle='Add workout plan' onClick={goToWorkoutPlan} />
           </div>)

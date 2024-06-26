@@ -1,10 +1,13 @@
 // src/Home.tsx
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+//css
 import './Home.scss';
+
+// components
 import PageHeading from '../../components/PageHeading/PageHeading';
 import Card from '../../components/Card/Card';
-import { useNavigate } from 'react-router-dom';
 
 const pageHeadingData = {
     headingLabel: 'Stay On Track with Muscle-Metrics',
@@ -19,7 +22,11 @@ const cardData = {
 }
 
 const Home: React.FC = () => {
+
+    // state variables
     const navigate = useNavigate();
+
+    // ui methods
     const goToWorkOutPlan = () => {
         navigate("/workout-plan")
     }
@@ -41,10 +48,6 @@ const Home: React.FC = () => {
                 onButton1Click={goToWorkOutPlan}
                 onButton2Click={goToAboutPage}
             />
-
-
-            {/* features to be listed here */}
-
         </div>
     );
 };

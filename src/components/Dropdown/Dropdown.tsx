@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import "./Dropdown.scss"
 import {DropdownProps} from "./Dropdown.d"
 import { useDispatch } from 'react-redux';
@@ -17,6 +17,12 @@ const Dropdown = (props:DropdownProps) => {
       optionSelectHandler(event.target.value);
       }
   };
+
+  useEffect(()=>{
+    if(!value){
+      optionSelectHandler(options[0].title)
+      }
+  },[])
   return (
     <div className="dropdown-container">
     {labelHeading &&  <label htmlFor="dropdown" >

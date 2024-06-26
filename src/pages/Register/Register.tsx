@@ -1,17 +1,30 @@
 // src/Register.tsx
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+// firebase
 import { app, auth } from '../../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import "./Register.scss"
-import Button from '../../components/Button/Button';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { showAlert } from '../../store/features/alert/alertSlice';
-import { ACCOUNT_CREATED_SUCCESSFULLY } from '../../utils/constants/app.constants';
 import { addDoc, collection, getFirestore } from 'firebase/firestore';
+
+// css
+import "./Register.scss"
+
+// components
+import Button from '../../components/Button/Button';
+
+// redux store
+import { showAlert } from '../../store/features/alert/alertSlice';
 import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
-const firestore = getFirestore(app)
+
+// constants
+import { ACCOUNT_CREATED_SUCCESSFULLY } from '../../utils/constants/app.constants';
+
 const Register: React.FC = () => {
+
+  // state variables
+  const firestore = getFirestore(app)
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -19,10 +32,11 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+
+  // ui methods
   const addUserData = async (data: any) => {
   const result = await addDoc(collection(firestore,"users"),data);
   console.log("result",result)
-
   };
 
   const handleRegister = async () => {
@@ -63,6 +77,7 @@ const Register: React.FC = () => {
   const GoToLoginPage = ()=>{
     navigate("/login")
   }
+  
   return (
     <div className='register-container'>
       <h2 className="register-title">Create account</h2>

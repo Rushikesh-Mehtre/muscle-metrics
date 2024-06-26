@@ -1,23 +1,37 @@
 import React, { useState } from 'react';
-import './login.scss';
 import { useDispatch } from 'react-redux';
-import { showAlert } from '../../store/features/alert/alertSlice';
-import { ACCOUNT_DOES_NOT_EXIST, INVALID_CREDENTIALS} from '../../utils/constants/app.constants';
-import { login } from '../../store/features/login/loginSlice';
 import { useNavigate } from 'react-router-dom';
-import Button from '../../components/Button/Button';
-import { auth } from '../../firebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+
+// css
+import './login.scss';
+
+// redux store
+import { showAlert } from '../../store/features/alert/alertSlice';
+import { login } from '../../store/features/login/loginSlice';
 import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
 
+// constants
+import { ACCOUNT_DOES_NOT_EXIST, INVALID_CREDENTIALS} from '../../utils/constants/app.constants';
+
+//components
+import Button from '../../components/Button/Button';
+
+// firebase
+import { auth } from '../../firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
+
+  // state variables
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
 
+  // ui methods
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+    setEmailId(e.target.value);
   };
-
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
@@ -27,9 +41,6 @@ const Login: React.FC = () => {
     // Handle form submission logic here
   };
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const GoToRegisterPage = () => {
     navigate("/register")
   }
@@ -38,7 +49,7 @@ const Login: React.FC = () => {
     dispatch(showLoader());
 
     try {
-      const loginUserCredentials = await signInWithEmailAndPassword(auth, username, password);
+      const loginUserCredentials = await signInWithEmailAndPassword(auth, emailId, password);
       dispatch(hideLoader());
       const user = loginUserCredentials.user;
         dispatch(login({userId:user.uid}));
@@ -60,18 +71,17 @@ const Login: React.FC = () => {
     }
   }
 
-
   return (
     <div className="login-container">
       <h2 className="login-title">Login to continue</h2>
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="login-form-group">
-          <label htmlFor="username" className="login-label">Username</label>
+          <label htmlFor="emailId" className="login-label">Email ID</label>
           <input
             type="text"
-            id="username"
+            id="emailId"
             className="login-input"
-            value={username}
+            value={emailId}
             onChange={handleUsernameChange}
             required
           />
@@ -91,7 +101,6 @@ const Login: React.FC = () => {
       </form>
       <p className="login-register-link">
         <span>
-
           Don't have an account?
         </span>
         <span onClick={() => GoToRegisterPage()} className='register-label'> Register</span>

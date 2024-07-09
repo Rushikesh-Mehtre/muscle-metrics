@@ -7,8 +7,16 @@
   color: var(--text-color);
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: center;
+  /* Ensures the root takes at least the viewport height */
+}
+
 .App {
-  height: 100vh;
+  height: 100%;
 }
 
 /* to keep application for mobiles only */

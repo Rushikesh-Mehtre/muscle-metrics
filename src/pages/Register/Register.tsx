@@ -112,7 +112,7 @@ const Register: React.FC = () => {
           <span className='hide-show-icons'>
             {
               hidePassword ?
-                <HiMiniEye onClick={() => setHidePassword(false)} title='Show password' /> : <HiEyeOff onClick={() => setHidePassword(true)} title='Hide password' />
+                <HiMiniEye className='icon' onClick={() => setHidePassword(false)} title='Show password' /> : <HiEyeOff className='icon' onClick={() => setHidePassword(true)} title='Hide password' />
             }
           </span>
         </div>
@@ -127,7 +127,7 @@ const Register: React.FC = () => {
           <span className='hide-show-icons'>
             {
               hideConfirmPassword ?
-                <HiMiniEye onClick={() => setHideConfirmPassword(false)} title='Show password' /> : <HiEyeOff onClick={() => setHideConfirmPassword(true)} title='Hide password' />
+                <HiMiniEye className='icon' onClick={() => setHideConfirmPassword(false)} title='Show password' /> : <HiEyeOff className='icon' onClick={() => setHideConfirmPassword(true)} title='Hide password' />
             }
           </span>
         </div>

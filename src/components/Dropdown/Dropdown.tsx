@@ -20,7 +20,7 @@ const Dropdown = (props:DropdownProps) => {
 
   useEffect(()=>{
     if(!value){
-      optionSelectHandler(options[0].title)
+      // optionSelectHandler(options[0].title)
       }
   },[])
   return (

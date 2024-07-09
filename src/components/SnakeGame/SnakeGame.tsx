@@ -8,7 +8,7 @@ const INITIAL_SNAKE = [{ x: 10, y: 10 }];
 const INITIAL_DIRECTION = { x: 1, y: 0 };
 const INITIAL_FOOD = { x: Math.floor(Math.random() * BOARD_SIZE), y: Math.floor(Math.random() * BOARD_SIZE) };
 
-const SnakeGame: React.FC = () => {
+const SnakeGame = ({closeGame}:any) => {
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
   const [food, setFood] = useState(INITIAL_FOOD);
@@ -106,7 +106,7 @@ const SnakeGame: React.FC = () => {
   };
 
   return (
-    <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+    <Modal isOpen={modalOpen} onClose={() => {closeGame();setModalOpen(false)}}>
       <div className="game-container">
         <div className="score">Score: {score}</div>
         <div className="game-board">

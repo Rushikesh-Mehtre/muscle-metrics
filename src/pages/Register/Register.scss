@@ -30,6 +30,17 @@
             border-radius: 4px;
         }
 
+        .password-field-container,
+        .confirm-password-field-container {
+            position: relative;
+
+            .hide-show-icons {
+                position: absolute;
+                top: 12px;
+                right: 20px;
+            }
+        }
+
 
 
     }

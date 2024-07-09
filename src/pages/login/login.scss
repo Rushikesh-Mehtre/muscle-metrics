@@ -24,6 +24,13 @@
 
   .login-form-group {
     margin-bottom: 15px;
+    position: relative;
+
+    .hide-show-icons {
+      position: absolute;
+      top: 35px;
+      right: 15px;
+    }
   }
 
   .login-label {

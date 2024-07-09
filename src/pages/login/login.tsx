@@ -11,7 +11,7 @@ import { login } from '../../store/features/login/loginSlice';
 import { hideLoader, showLoader } from '../../store/features/loading/loadingSlice';
 
 // constants
-import { ACCOUNT_DOES_NOT_EXIST, INVALID_CREDENTIALS} from '../../utils/constants/app.constants';
+import { ACCOUNT_DOES_NOT_EXIST, INVALID_CREDENTIALS } from '../../utils/constants/app.constants';
 
 //components
 import Button from '../../components/Button/Button';
@@ -20,6 +20,11 @@ import Button from '../../components/Button/Button';
 import { auth } from '../../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
+// icons
+import { HiMiniEye } from "react-icons/hi2";
+import { HiEyeOff } from "react-icons/hi";
+
+
 const Login: React.FC = () => {
 
   // state variables
@@ -27,6 +32,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
+  const [hidePassword, setHidePassword] = useState(true);
 
   // ui methods
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,10 +58,10 @@ const Login: React.FC = () => {
       const loginUserCredentials = await signInWithEmailAndPassword(auth, emailId, password);
       dispatch(hideLoader());
       const user = loginUserCredentials.user;
-        dispatch(login({userId:user.uid}));
-        navigate("/home");
+      dispatch(login({ userId: user.uid }));
+      navigate("/home");
       // Handle successful login, e.g., redirect to another page
-    } catch (error:any) {
+    } catch (error: any) {
       dispatch(hideLoader());
       if (error.message === 'Firebase: Error (auth/invalid-credential).') {
         dispatch(showAlert(INVALID_CREDENTIALS))
@@ -89,13 +95,19 @@ const Login: React.FC = () => {
         <div className="login-form-group">
           <label htmlFor="password" className="login-label">Password</label>
           <input
-            type="password"
+            type={hidePassword ? "password" : "text"}
             id="password"
             className="login-input"
             value={password}
             onChange={handlePasswordChange}
             required
           />
+          <span className='hide-show-icons'>
+            {
+              hidePassword ?
+                <HiMiniEye onClick={() => setHidePassword(false)} title='Show password' /> : <HiEyeOff onClick={() => setHidePassword(true)} title='Hide password' />
+            }
+          </span>
         </div>
         <Button buttonTitle='Login' onClick={loginHandler} size="medium" />
       </form>

@@ -362,6 +362,10 @@ const TodaysWorkout = () => {
     setShowGames(true);
   }
 
+  const closeGame = ()=>{
+    setShowGames(false)
+  }
+
   // use effect blocks
   useEffect(() => {
     dispatch(showLoader());
@@ -507,17 +511,21 @@ const TodaysWorkout = () => {
         date={dataForModal[0].addedAt}
       />}
       <Modal isOpen={showModal1} onClose={handleCloseModal1}>
-        <div>
-          <p>Do you want to continue ?</p>
+        <div className='workout-confirmation-modal'>
+          <p className='heading'>Do you want to continue ?</p>
           <p>After selecting today's workout it cannot be changed until next day</p>
         </div>
-      </Modal>
-      <div className='games-container'>
+        <div className='buttons'>
+        <Button buttonTitle='Cancel' onClick={handleCloseModal1} size="small" />
+        <Button buttonTitle='Continue' onClick={handleContinue} size="small" />
 
-        <p className='heading'>Taking break between sets ? - You can play games</p>
-        <Button buttonTitle='Show game' onClick={showGameHandler} size="small" />
-        {showGames && <SnakeGame />}
-      </div>
+        </div>
+      </Modal>
+    {selectedExercise &&   <div className='games-container'>
+        <p className='heading'>Taking break between sets ? - You can play game</p>
+        <Button buttonTitle='Play game' onClick={showGameHandler} size="small" />
+        {showGames && <SnakeGame closeGame={closeGame} />}
+      </div>}
 
     </div>
   )

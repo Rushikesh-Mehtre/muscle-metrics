@@ -491,14 +491,11 @@ const TodaysWorkout = () => {
             !showCurrentEntryFields &&
 
             <Button size="medium" onClick={() => setShowCurrentEntryFields(true)} buttonTitle='Add new Entry' />
-
           }
           {toShowSaveBtn && <Button size="medium" onClick={() => addExerciseDataToServer()} buttonTitle='Save' />}
         </div>
       </div>
-
       }
-
       {showModal && <WeightRepTrackModalComponent
         showModal={showModal}
         handleClose={handleCloseModal}
@@ -518,7 +515,6 @@ const TodaysWorkout = () => {
         <div className='buttons'>
         <Button buttonTitle='Cancel' onClick={handleCloseModal1} size="small" />
         <Button buttonTitle='Continue' onClick={handleContinue} size="small" />
-
         </div>
       </Modal>
     {selectedExercise &&   <div className='games-container'>

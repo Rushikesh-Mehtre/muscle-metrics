@@ -105,7 +105,7 @@ const Login: React.FC = () => {
           <span className='hide-show-icons'>
             {
               hidePassword ?
-                <HiMiniEye onClick={() => setHidePassword(false)} title='Show password' /> : <HiEyeOff onClick={() => setHidePassword(true)} title='Hide password' />
+                <HiMiniEye className='icon' onClick={() => setHidePassword(false)} title='Show password' /> : <HiEyeOff  className='icon' onClick={() => setHidePassword(true)} title='Hide password' />
             }
           </span>
         </div>

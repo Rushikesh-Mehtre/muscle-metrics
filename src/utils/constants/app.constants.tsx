@@ -76,6 +76,11 @@ export const NO_RECORDS_FOUND = {
     subHeading:"No records found.",
     duration:1500
 }
+export const TEST_CREDENTIALS_MESSAGE = {
+    heading:"Test credentials",
+    subHeading:"email - test@gmail.com    |    password - test@1234",
+    duration:5000
+}
 
 export const workOutList = [
     {

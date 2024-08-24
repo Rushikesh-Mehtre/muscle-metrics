@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
 
 // constants
-import { STRING_CONSTANTS, WARMUP_STRETCHING_ALERT } from './utils/constants/app.constants';
+import { STRING_CONSTANTS, TEST_CREDENTIALS_MESSAGE } from './utils/constants/app.constants';
 
 // components
 import Navbar from './components/Navbar/Navbar';
@@ -70,18 +70,12 @@ function App() {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      setTimeout(() => {
-        dispatch(showAlert(WARMUP_STRETCHING_ALERT))
-      }, 5000);
-    }
-  }, [isLoggedIn])
-
-  useEffect(() => {
     fetchUsersData();
   }, [isLoggedIn])
 
   useEffect(() => {
+    dispatch(showAlert(TEST_CREDENTIALS_MESSAGE))
+
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // user is logged in 
